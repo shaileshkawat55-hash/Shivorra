@@ -564,6 +564,24 @@ main .cats .wrap{max-width:none;margin:0;padding:6px 2px 8px}
 .modal.cvf #mb{height:100%;min-height:0}
 .modal.cvf #mb>*{flex:none}
 .modal.cvf #acb{flex:1 1 auto;min-height:0;max-height:none}
+
+/* ===== v12: ratings and reviews ===== */
+.rvw{margin:18px 0 6px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface);display:flex;flex-direction:column;gap:14px}
+.rvw h2{margin:0;font-size:1.15rem}
+.rvsum{display:flex;gap:18px;align-items:center}
+.rvbig{font-size:2.3rem;font-weight:800;line-height:1}
+.rvstars{color:var(--accent);letter-spacing:2px}
+.rvbars{flex:1;display:flex;flex-direction:column;gap:3px}
+.rvbar{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--muted)}
+.rvbar i{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}.rvbar i b{display:block;height:100%;background:var(--accent)}
+.rvform{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px dashed var(--line);border-radius:14px;background:var(--bg)}
+.rvpick{display:flex;gap:2px}.rvpick button{min-height:0!important;width:auto!important;border:0!important;background:none!important;padding:2px 5px!important;font-size:2rem;line-height:1;color:var(--line)}.rvpick button.on{color:var(--accent)}
+.rvform textarea{min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface);color:var(--ink);font:inherit}
+.rvi{display:flex;flex-direction:column;gap:4px;padding:12px 0 0;border-top:1px solid var(--line)}
+.rvi .rvh{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.rvi p{margin:0;white-space:pre-wrap;word-break:break-word}
+.rvi small,.rvwho{color:var(--muted)}
+.rvmore{align-self:center}
 </style>
 <style>
 #cats .chip.wc{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:4px 6px!important;min-width:64px;color:var(--muted)}
@@ -631,6 +649,31 @@ main .cats .wrap{max-width:none;margin:0;padding:6px 2px 8px}
 .tbn.t-light{background:linear-gradient(135deg,#e8f0ff,#cfe0ff);color:#1D3F8C;border-color:#9db8f0}
 .wlg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.wlg .card{cursor:pointer}
 @media(min-width:700px){.wlg{grid-template-columns:repeat(4,1fr)}}
+
+/* ===== v13: review photos and videos ===== */
+.rvmed{display:flex;flex-direction:column;gap:8px}
+.rvth{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.rvth:empty{display:none}
+.rvgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
+.rvt{position:relative;display:block;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--line);padding:0!important;min-height:0!important}
+.rvt img,.rvt video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.rvt .vpl{position:absolute;left:50%;top:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);width:30px;height:30px;padding:0;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;font-style:normal;font-size:.8rem;pointer-events:none}
+.rvt .x{position:absolute;top:4px;right:4px;width:26px;height:26px;min-height:0!important;padding:0!important;border-radius:50%!important;border:0!important;background:rgba(0,0,0,.7)!important;color:#fff!important;font-size:.75rem;line-height:1;display:grid;place-items:center;z-index:2}
+.rvt .rvo{position:absolute;inset:0;width:100%;height:100%;min-height:0!important;padding:0!important;border:0!important;background:none!important}
+.rvmo{position:absolute;inset:0;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.1rem}
+#rvlb{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center}#rvlb.on{display:flex}
+#rvlb .lbm{display:grid;place-items:center;max-width:100vw;max-height:82dvh}#rvlb .lbm img,#rvlb .lbm video{max-width:100vw;max-height:82dvh;object-fit:contain}
+#rvlb .lbx,#rvlb .lbp,#rvlb .lbn{position:absolute;width:46px;height:46px;min-height:0;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:1.5rem;line-height:1;display:grid;place-items:center}
+#rvlb .lbx{top:calc(env(safe-area-inset-top,0px) + 14px);right:14px}#rvlb .lbp{left:10px;top:50%;transform:translateY(-50%)}#rvlb .lbn{right:10px;top:50%;transform:translateY(-50%)}
+#rvlb .lbc{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);color:#fff;font-weight:700;font-size:.85rem}
+
+/* ===== v14: admin review cards ===== */
+.rvc{gap:10px}
+.rvu{display:flex;align-items:center;gap:12px}.rvun{display:flex;flex-direction:column;min-width:0}.rvun b{font-size:1rem;overflow:hidden;text-overflow:ellipsis}.rvun small{color:var(--muted)}
+.rvpr{font-weight:700;font-size:.9rem;padding:6px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.rvbar2{display:flex;gap:8px;flex-wrap:wrap}
+.rvt.on{outline:3px solid var(--ink);outline-offset:-3px}
+.rvck{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.9);border:2px solid var(--ink);color:var(--ink);display:grid;place-items:center;font-weight:800;font-size:.8rem;line-height:1}
+.rvt.on .rvck{background:var(--ink);color:#fff}
 </style>
 </head>
 <body>
@@ -936,14 +979,14 @@ function myOrders(noFetch){var u=me();if(!u){authM();return}var o=myO();
  M('<h2>My orders</h2>'+(o.length?o.map(function(x){return '<div class="oc"><div class="ohd"><b>'+esc(x.id)+'</b>'+chip(x.st)+'</div><p>'+dt(x.ts)+' · Order ID <b style="color:var(--ink)">'+esc(x.id)+'</b> <button class="link" style="display:inline;padding:0 4px" onclick="copyTxt(\''+esc(x.id)+'\',\'Order ID copied\')">Copy</button></p>'+steps(x.st)+'<p>'+x.it.map(function(i){return itx(i)}).join(', ')+'</p><p><b style="color:var(--ink)">'+money(x.t)+'</b> · '+esc(x.pm)+(x.paid?' · Paid':'')+'</p><p>'+esc(STMSG[x.st]||'')+'</p><button class="link" style="align-self:flex-start" onclick="chatM(\'Order '+esc(x.id)+': \')">💬 Ask about this order</button>'+waBtn(x.id,1)+'</div>'}).join(''):'<p>You have not placed any orders yet.</p>')+'<button class="link" onclick="menu()">← Back</button>',0,'orders');
  if(!noFetch)loadOrders().then(function(chg){if(chg&&VIEW==='orders')myOrders(true)})}
 /* ---------- Admin panel ---------- */
-var AMETA={Orders:['📦','Orders','Approve, ship, deliver'],Chats:['💬','Chats','Customer messages'],Customers:['👥','Customers','Registered customers'],Products:['🛍️','Products','Add, edit, delete'],Homepage:['🏠','Homepage','Banner, rows, category circles'],Payments:['💳','Payment settings','UPI, QR, WhatsApp number'],Policies:['📄','Policies','Terms and policies'],FAQs:['❓','FAQs','Quick answers'],Social:['🔗','Social media','Links at the bottom'],Logo:['✨','Logo & name','Picture and name style'],Managers:['🧑‍💼','Managers','Add and manage managers'],Security:['🔒','Security','Change your password']};
+var AMETA={Orders:['📦','Orders','Approve, ship, deliver'],Chats:['💬','Chats','Customer messages'],Customers:['👥','Customers','Registered customers'],Products:['🛍️','Products','Add, edit, delete'],Reviews:['⭐','Reviews','See, edit or delete reviews'],Homepage:['🏠','Homepage','Banner, rows, category circles'],Payments:['💳','Payment settings','UPI, QR, WhatsApp number'],Policies:['📄','Policies','Terms and policies'],FAQs:['❓','FAQs','Quick answers'],Social:['🔗','Social media','Links at the bottom'],Logo:['✨','Logo & name','Picture and name style'],Managers:['🧑‍💼','Managers','Add and manage managers'],Security:['🔒','Security','Change your password']};
 var BACKSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
-function adm(t){if(!isAdm())return;if(t==='_menu')tab='';else tab=t||tab;var TABS=ADM?['Orders','Chats','Customers','Products','Homepage','Payments','Policies','FAQs','Social','Logo','Managers','Security']:['Orders','Chats','Customers','Products','Homepage','Payments','Policies','FAQs','Social','Logo'].filter(can);if(tab&&TABS.indexOf(tab)<0)tab='';if(tab!=='Chats')CHO=null;if(adm.lt!==tab){ED={};adm.lt=tab}if(tab!=='Security')SEC={step:0,ch:'',sent:'',demo:'',pend:undefined};
+function adm(t){if(!isAdm())return;if(t==='_menu')tab='';else tab=t||tab;var TABS=ADM?['Orders','Chats','Customers','Products','Reviews','Homepage','Payments','Policies','FAQs','Social','Logo','Managers','Security']:['Orders','Chats','Customers','Products','Reviews','Homepage','Payments','Policies','FAQs','Social','Logo'].filter(can);if(tab&&TABS.indexOf(tab)<0)tab='';if(tab!=='Chats')CHO=null;if(adm.lt!==tab){ED={};adm.lt=tab}if(tab!=='Security')SEC={step:0,ch:'',sent:'',demo:'',pend:undefined};
  var n=unread(),h;
  if(!tab){h='<div class="ahd"><button class="aback" onclick="X()" aria-label="Close">'+BACKSVG+'</button><div class="att"><h2>'+(ADM?'Admin panel':'Manager panel')+'</h2><small>'+(ADM?'Store owner':'Manager')+' · choose a section</small></div><button class="alo" onclick="logout()">Log out</button></div><div class="atiles">'+TABS.map(function(k){var m=AMETA[k];return '<button class="atile" onclick="adm(\''+k+'\')"><i>'+m[0]+'</i><b>'+m[1]+'</b><small>'+m[2]+'</small>'+(k==='Chats'&&n?'<span class="badge">'+n+'</span>':'')+'</button>'}).join('')+'</div>';
   M(h,1,'adm-menu');return}
  h='<div class="ahd"><button class="aback" onclick="admBack()" aria-label="Back">'+BACKSVG+'</button><div class="att"><h2>'+AMETA[tab][0]+' '+AMETA[tab][1]+'</h2><small>'+(ADM?'Admin panel':'Manager panel')+'</small></div></div>';
- if(tab==='Orders')h+=admOrders();else if(tab==='Chats')h+=admChats();else if(tab==='Customers')h+=admCust();else if(tab==='Products')h+=admProd();else if(tab==='Homepage')h+=admHome();else if(tab==='Policies')h+=admList('terms');else if(tab==='FAQs')h+=admList('faqs');else if(tab==='Social')h+=admSocial();else if(tab==='Logo')h+=admLogo();else if(tab==='Managers')h+=admMgr();else if(tab==='Security')h+=admSec();else h+=admPay();
+ if(tab==='Orders')h+=admOrders();else if(tab==='Chats')h+=admChats();else if(tab==='Customers')h+=admCust();else if(tab==='Products')h+=admProd();else if(tab==='Reviews')h+=admRev();else if(tab==='Homepage')h+=admHome();else if(tab==='Policies')h+=admList('terms');else if(tab==='FAQs')h+=admList('faqs');else if(tab==='Social')h+=admSocial();else if(tab==='Logo')h+=admLogo();else if(tab==='Managers')h+=admMgr();else if(tab==='Security')h+=admSec();else h+=admPay();
  M(h,1,'adm-'+tab);
  tabsFix();
  if(tab==='Security'&&SEC.pend===undefined)secLoad();
@@ -1361,24 +1404,13 @@ function idbDo(f){IDBP.then(function(d){if(d)try{f(d.transaction('f','readwrite'
 try{DB=JSON.parse(localStorage.getItem(K))}catch(e){}
 function id(){return 'd'+Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
 function seed(){var pr=[['Classic White Shirt','👔','Men',799,1499,'#E9E4D6'],['Slim Fit Jeans','👖','Men',999,1999,'#DDE3EA'],['Silk Saree','🥻','Women',2499,4999,'#F1DDE0'],['Floral Kurti','👗','Women',699,1299,'#EADCF0'],['Sherwani Set','🧥','Ethnic',3999,7999,'#E8DFC9'],['Leather Sneakers','👟','Footwear',1499,2999,'#E4E4E4'],['Analog Watch','⌚','Watches',1999,3999,'#D9D6CE'],['Gold Bracelet','📿','Accessories',499,999,'#F3E7C3']];
- return{users:[{id:'u_admin',email:'m9999999999@phone.shivorra.in',password:'admin~shv~',meta:{first_name:'Admin',last_name:'Demo',mobile:'9999999999',username:'admin'}}],
- profiles:[{id:'u_admin',first_name:'Admin',last_name:'Demo',email:'m9999999999@phone.shivorra.in',mobile:'9999999999',username:'admin',addresses:[],avatar_path:null,created_at:new Date().toISOString()}],
- user_roles:[{user_id:'u_admin',role:'admin'}],store_settings:[{id:1,upi_id:'demo@upi',whatsapp:'9999999999',qr_path:'',logo_text:'Shivorra'}],
+ return{users:[],
+ profiles:[],
+ user_roles:[],store_settings:[{id:1,upi_id:'demo@upi',whatsapp:'',qr_path:'',logo_text:'Shivorra'}],
  products:pr.map(function(p,i){return{id:i+1,name:p[0],emoji:p[1],category:p[2],price:p[3],mrp:p[4],bg:p[5],rating:4.3,ratings_count:120+i*37,featured:i<3,description:'Demo product. Admin se edit kar sakte ho.',images:[],variants:[],sizes:i<2?['S','M','L','XL']:[]}}),
  orders:[],chat_messages:[]}}
 if(!DB)DB=seed();
-(function(){var PH='m8239447543@phone.shivorra.in',GM='meenashailesh512@gmail.com',MB='8239447543',K1='u_shailesh';
-/* ONE owner account: log in with mobile 8239447543 OR meenashailesh512@gmail.com. Same account, same password. */
-DB.orders.forEach(function(o){if(o.user_id==='u_meena')o.user_id=K1});
-['u_meena','u_admin'].forEach(function(x){DB.users=DB.users.filter(function(u){return u.id!==x});DB.profiles=DB.profiles.filter(function(p){return p.id!==x});DB.user_roles=DB.user_roles.filter(function(r){return r.user_id!==x})});
-var u=DB.users.filter(function(x){return x.id===K1})[0];
-if(!u){u={id:K1,password:'DHANADASHIV@#',meta:{first_name:'Shailesh',last_name:'Kawat',mobile:MB,username:'shailesh'}};DB.users.push(u)}
-u.email=GM;u.aliases=[PH];
-var p=DB.profiles.filter(function(x){return x.id===K1})[0];
-if(!p){p={id:K1,first_name:'Shailesh',last_name:'Kawat',username:'shailesh',addresses:[],avatar_path:null,created_at:new Date().toISOString()};DB.profiles.push(p)}
-p.email=GM;p.mobile=MB;
-if(!DB.user_roles.some(function(r){return r.user_id===K1&&r.role==='admin'}))DB.user_roles.push({user_id:K1,role:'admin'});
-save()})();
+
 function save(){try{localStorage.setItem(K,JSON.stringify(DB))}catch(e){}}
 function ok(d){return{data:d,error:null}}
 function er(m){return{data:null,error:{message:m}}}
@@ -1465,7 +1497,7 @@ function rpc(n,a){a=a||{};
   delete EOTP[cu2.id];if(cu2.email!==em2){if(/@phone\.shivorra\.in$/i.test(cu2.email))cu2.aliases=(cu2.aliases||[]).concat([cu2.email]);cu2.email=em2}
   if(pf2){pf2.email=em2;pf2.email_verified=true}cu2.email_verified=true;save();return Promise.resolve(ok({email:em2}))}
  if(n==='username_available')return Promise.resolve(ok(!DB.profiles.some(function(p){return p.username===String(a.p_username).trim().toLowerCase()})));
- if(n==='mobile_available')return Promise.resolve(ok(!DB.profiles.some(function(p){return p.mobile===a.p_mobile})&&a.p_mobile!=='8239447543'));
+ if(n==='mobile_available')return Promise.resolve(ok(!DB.profiles.some(function(p){return p.mobile===a.p_mobile})));
  if(n==='place_order'){var s=sess();if(!s)return Promise.resolve(er('Please log in.'));var tot=0,its=[];
   (a.p_items||[]).forEach(function(i){var p=DB.products.filter(function(x){return x.id===i.id})[0];if(!p)return;var pr=p.price;
    (p.variants||[]).forEach(function(v){if(v.n===i.v)pr=+v.p});tot+=pr*i.q;var o={id:p.id,n:p.name,q:i.q,p:pr,e:p.emoji};if(i.v)o.v=i.v;if(i.s)o.s=i.s;its.push(o)});
@@ -1473,13 +1505,20 @@ function rpc(n,a){a=a||{};
    var cr=a.p_coupon?couponCalc(a.p_coupon,s.user.id,its.map(function(i){return{id:i.id,p:i.p,q:i.q}}),tot):null;if(cr&&!cr.ok)return Promise.resolve(er(cr.msg));var dsc=cr?cr.off:0;if(cr){cr.c.used=(cr.c.used||[]).concat([s.user.id])}tot-=dsc;var o={id:id(),coupon:cr?cr.c.code:'',discount:dsc,code:'SHV'+String(Math.floor(Math.random()*1e6)).padStart(6,'0'),user_id:s.user.id,email:s.user.email,customer_name:((pf.first_name||'')+' '+(pf.last_name||'')).trim(),mobile:pf.mobile||'',address:a.p_address,payment_method:'UPI',utr:a.p_utr,screenshot_path:a.p_screenshot_path||null,total:tot,status:'Pending approval',paid:false,items:its,created_at:new Date().toISOString()};
   DB.orders.push(o);save();return Promise.resolve(ok({id:o.id,code:o.code,total:o.total,status:o.status}))}
  return Promise.resolve(er('Not available in demo'))}
+window.__demoOwner={exists:function(){return DB.user_roles.some(function(r){return r.role==='admin'})},
+ create:function(o){if(window.__demoOwner.exists())return 'An owner account already exists on this device.';
+  var m=String(o.mobile||'').replace(/\D/g,''),em=String(o.email||'').trim().toLowerCase(),f=String(o.first||'').trim(),l=String(o.last||'').trim();
+  if(!f)return 'Enter your first name.';if(!/^[6-9]\d{9}$/.test(m))return 'Enter a valid 10-digit mobile number.';if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return 'Enter a valid email or leave it empty.';
+  if(String(o.password||'').length<8)return 'Use at least 8 characters for the password.';
+  var PH='m'+m+'@phone.shivorra.in',id='u_owner',u={id:id,email:em||PH,aliases:em?[PH]:[],password:o.password,meta:{first_name:f,last_name:l,mobile:m,username:'owner'}};
+  DB.users.push(u);DB.profiles.push({id:id,first_name:f,last_name:l,email:em||PH,mobile:m,username:'owner',addresses:[],avatar_path:null,created_at:new Date().toISOString()});DB.user_roles.push({user_id:id,role:'admin'});save();return ''}};
 window.__demoSB={createClient:function(){return{from:Q,auth:auth,storage:{from:bucket},rpc:rpc,admin:{createUser:function(o){var e=String(o.email).toLowerCase(),m=o.meta||{};
   if(DB.users.some(function(u){return u.email===e})||(m.mobile&&DB.profiles.some(function(p){return p.mobile===m.mobile})))return Promise.resolve(er('This email or mobile number is already used.'));
   var u={id:id(),email:e,password:o.password,meta:m};DB.users.push(u);DB.profiles.push({id:u.id,first_name:m.first_name||'',last_name:m.last_name||'',email:e,mobile:m.mobile||'',username:null,addresses:[],avatar_path:null,created_at:new Date().toISOString()});save();return Promise.resolve(ok({id:u.id}))},
  updateUser:function(uid,o){var u=DB.users.filter(function(x){return x.id===uid})[0];if(!u)return Promise.resolve(er('Not found'));if(o.password)u.password=o.password;save();return Promise.resolve(ok({}))},deleteUser:function(uid){DB.users=DB.users.filter(function(u){return u.id!==uid});DB.profiles=DB.profiles.filter(function(p){return p.id!==uid});DB.user_roles=DB.user_roles.filter(function(r){return r.user_id!==uid});save();return Promise.resolve(ok({}))}}}}};
 window.__demoMode=function(){
  var d=document.createElement('div');d.style.cssText='position:fixed;left:8px;bottom:78px;z-index:200;background:#D4AF5A;color:#1A1405;font:700 12px/1.3 system-ui,sans-serif;padding:7px 11px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.35);max-width:230px';
- d.innerHTML='DEMO MODE · data sirf is phone me save hota hai<br>Admin: 9999999999 / admin<br><u>Reset</u> · tap to hide';
+ d.innerHTML='DEMO MODE · data sirf is phone me save hota hai<br><u>Reset</u> · tap to hide';
  d.onclick=function(e){if(e.target.tagName==='U'){try{localStorage.removeItem(K);localStorage.removeItem(SK)}catch(x){}location.reload()}else d.remove()};document.body.appendChild(d);return window.__demoSB}})();
 
 /* ---------- In-page confirm (browser confirm() is blocked inside previews) ---------- */
@@ -1521,7 +1560,7 @@ async function secSave(){var o=($('sot').value||'').trim(),p=$('snp').value,p2=$
  SEC={step:0,ch:'',sent:'',demo:'',pend:{at:r.data.activates_at}};toast('Password change scheduled');adm('Security')}
 async function secCancel(){if(!await ask('Cancel the scheduled password change?'))return;await sb.rpc('password_cancel');SEC.pend=null;toast('Scheduled change cancelled');adm('Security')}
 /* ---------- Managers (owner only, max 3) ---------- */
-var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name'},ALLP=['Products','Chats','Orders','Customers','Homepage','Payments','Policies','FAQs','Social','Logo'];
+var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Reviews:'Reviews (see, edit or delete customer reviews)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name'},ALLP=['Products','Reviews','Chats','Orders','Customers','Homepage','Payments','Policies','FAQs','Social','Logo'];
 function can(k){return !!USER&&(ADM||MGR.indexOf(k)>=0)}
 async function loadMgrs(){var a=await Promise.all([sb.from('user_roles').select('*'),sb.from('profiles').select('*')]),pm={};(a[1].data||[]).forEach(function(x){pm[x.id]=x});
  MGRS=(a[0].data||[]).filter(function(r){return r.role==='manager'&&pm[r.user_id]}).map(function(r){var x=pm[r.user_id];return{id:r.user_id,perms:r.perms||[],login:x.mobile||x.email||''}})}
@@ -1607,7 +1646,7 @@ async function secSave(){var o=($('sot').value||'').trim(),p=$('snp').value,p2=$
  SEC={step:0,ch:'',sent:'',demo:'',pend:{at:r.data.activates_at}};toast('Password change scheduled');adm('Security')}
 async function secCancel(){if(!await ask('Cancel the scheduled password change?'))return;await sb.rpc('password_cancel');SEC.pend=null;toast('Scheduled change cancelled');adm('Security')}
 /* ---------- Managers (owner only, max 3) ---------- */
-var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name'},ALLP=['Products','Chats','Orders','Customers','Homepage','Payments','Policies','FAQs','Social','Logo'];
+var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Reviews:'Reviews (see, edit or delete customer reviews)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name'},ALLP=['Products','Reviews','Chats','Orders','Customers','Homepage','Payments','Policies','FAQs','Social','Logo'];
 function can(k){return !!USER&&(ADM||MGR.indexOf(k)>=0)}
 async function loadMgrs(){var a=await Promise.all([sb.from('user_roles').select('*'),sb.from('profiles').select('*')]),pm={};(a[1].data||[]).forEach(function(x){pm[x.id]=x});
  MGRS=(a[0].data||[]).filter(function(r){return r.role==='manager'&&pm[r.user_id]}).map(function(r){var x=pm[r.user_id];return{id:r.user_id,perms:r.perms||[],login:x.mobile||x.email||''}})}
@@ -1985,6 +2024,7 @@ async function rf(b,k){if(RFB)return;RFB=1;b.classList.add('spin');b.disabled=tr
   if(k==='orders'){await loadOrders()}
   else if(k==='cust'){var old=CUST;await loadCust();if(old&&old.length&&CUST&&!CUST.length){CUST=old;ok=false}}
   else if(k==='chats'){await loadChats();if(CUST===null)await loadCust()}
+  else if(k==='rev'){await revFetchAll()}
  }catch(e){ok=false}
  var w=700-(Date.now()-t0);if(w>0)await new Promise(function(r){setTimeout(r,w)});
  RFB=0;
@@ -1992,6 +2032,7 @@ async function rf(b,k){if(RFB)return;RFB=1;b.classList.add('spin');b.disabled=tr
   if(k==='orders'&&VIEW==='adm-Orders')edKeep(function(){adm('Orders')});
   else if(k==='cust'&&VIEW==='adm-Customers')edKeep(function(){adm('Customers')});
   else if(k==='chats'&&VIEW==='adm-Chats'&&!CHO)edKeep(function(){adm('Chats');ui()});
+  else if(k==='rev'&&VIEW==='adm-Reviews')edKeep(function(){adm('Reviews')});
   else{b.classList.remove('spin');b.disabled=false}
  }catch(e){b.classList.remove('spin');b.disabled=false}
  toast(ok?'Updated ✓':'Could not refresh. Check your internet and try again.')}
@@ -2018,7 +2059,151 @@ var _M11=M;M=function(){var r=_M11.apply(this,arguments);try{$('modal').classLis
 var _homeApply11=homeApply;homeApply=function(){_homeApply11();setTimeout(pvPush,0)};
 
 
-(async function(){try{await boot();window.__ok=1}catch(e){window.__showErr(e)}})();
+/* ===== v12: ratings and reviews (customers write, store staff moderate) ===== */
+var RV={all:null},RVD={pid:null,stars:0,text:'',all:0},RVA={q:'',st:'0',ed:null,load:0};
+function stars(n){n=Math.max(0,Math.min(5,Math.round(+n||0)));return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n)}
+function rvDate(t){try{return new Date(t).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}catch(e){return ''}}
+function rvName(){var f=(PROF&&PROF.first_name||'').trim(),l=(PROF&&PROF.last_name||'').trim();return (f||'Customer')+(l?' '+l.charAt(0).toUpperCase()+'.':'')}
+function rvOf(pid){return (RV.all||[]).filter(function(x){return String(x.product_id)===String(pid)})}
+function revStats(){var m={};(RV.all||[]).forEach(function(x){var k=String(x.product_id),a=m[k]||(m[k]={n:0,t:0});a.n++;a.t+=+x.rating||0});P.forEach(function(p){var a=m[String(p.id)];p.v=a?a.n:0;p.r=a?Math.round(a.t/a.n*10)/10:0})}
+async function revFetchAll(){if(!sb)return false;var r=await sb.from('reviews').select('*').order('created_at',{ascending:false}).limit(2000);if(r.error)return false;RV.all=r.data||[];revStats();return true}
+function revUi(){try{grid()}catch(e){}try{if(typeof strips==='function')strips()}catch(e){}}
+var _lp12=loadProducts;loadProducts=async function(){var r=await _lp12.apply(this,arguments);try{await revFetchAll()}catch(e){}return r};
+
+/* --- customer side: product page --- */
+function revHtml(p){var list=rvOf(p.id),n=list.length,avg=n?list.reduce(function(a,x){return a+(+x.rating||0)},0)/n:0,mine=USER?list.filter(function(x){return x.user_id===USER.id})[0]:null;
+ if(RVD.pid!==p.id)RVD={pid:p.id,stars:mine?+mine.rating:0,text:mine?(mine.text||''):'',all:0,media:rvMedia(mine),add:[]};
+ var sum=n?'<div class="rvsum"><div><div class="rvbig">'+(Math.round(avg*10)/10)+'</div><div class="rvstars">'+stars(avg)+'</div><small>'+n+' review'+(n>1?'s':'')+'</small></div><div class="rvbars">'+[5,4,3,2,1].map(function(k){var c=list.filter(function(x){return Math.round(+x.rating)===k}).length;return '<div class="rvbar"><span>'+k+'★</span><i><b style="width:'+Math.round(c/n*100)+'%"></b></i><span>'+c+'</span></div>'}).join('')+'</div></div>':'<p style="margin:0;color:var(--muted)">No reviews yet. Be the first to review this product.</p>';
+ var form=!USER?'<button class="cta alt" onclick="revLogin()">Log in to write a review</button>':
+  '<div class="rvform"><b>'+(mine?'Your review':'Write a review')+'</b><div class="rvpick" id="rvpick" role="radiogroup" aria-label="Your rating">'+[1,2,3,4,5].map(function(k){return '<button type="button" class="'+(k<=RVD.stars?'on':'')+'" onclick="revStar('+k+')" aria-label="'+k+' star'+(k>1?'s':'')+'">★</button>'}).join('')+'</div><textarea id="rvt" maxlength="500" placeholder="Tell others what you liked (optional)" oninput="RVD.text=this.value">'+esc(RVD.text)+'</textarea>'+rvMedHtml()+'<button class="cta" id="rvgo" onclick="revSubmit()">'+(mine?'Update review':'Submit review')+'</button>'+(mine?'<button class="link" onclick="revDelMine()">Delete my review</button>':'')+'</div>';
+ var show=RVD.all?list:list.slice(0,5),items=show.map(function(x){return '<div class="rvi"><div class="rvh"><b>'+esc(x.name||'Customer')+'</b><small>'+rvDate(x.created_at)+'</small></div><div class="rvstars">'+stars(+x.rating)+'</div>'+(x.text?'<p>'+esc(x.text)+'</p>':'')+rvGrid(x)+'</div>'}).join('');
+ return '<section class="rvw" id="rvw"><h2>Ratings &amp; reviews</h2>'+sum+form+items+(n>5&&!RVD.all?'<button class="link rvmore" onclick="RVD.all=1;revMount()">Show all '+n+' reviews</button>':'')+'</section>'}
+function revMount(){var p=pb(PDID),b=$('pdb');if(!p||!b)return;var o=$('rvw');if(o)o.remove();var w=b.querySelector('.pdw');if(w)w.insertAdjacentHTML('afterend',revHtml(p));revDrawMed()}
+var _pdDraw12=pdDraw;pdDraw=function(top){var r=_pdDraw12.apply(this,arguments);try{revMount()}catch(e){}return r};
+var _pd12=pd;pd=function(){var r=_pd12.apply(this,arguments);revRefresh();return r};
+async function revRefresh(){try{var ok=await revFetchAll();if(ok&&$('pdp').classList.contains('on')&&!(document.activeElement&&document.activeElement.id==='rvt'))pdDraw(false)}catch(e){}}
+function revStar(k){RVD.stars=k;var b=document.querySelectorAll('#rvpick button');for(var i=0;i<b.length;i++)b[i].classList.toggle('on',i<k)}
+function revLogin(){authM()}
+var _afterIn12=afterIn;afterIn=function(){var r=_afterIn12.apply(this,arguments);setTimeout(function(){if($('pdp').classList.contains('on')){RVD.pid=null;revMount()}},500);return r};
+async function revSubmit(){var p=pb(PDID);if(!p)return;if(!USER)return revLogin();if(!RVD.stars)return toast('Please tap the stars to rate.');
+ var t=String(RVD.text||'').trim().slice(0,500),done=false;busy('rvgo',1,'Saving…');
+ try{await revFetchAll();var mine=rvOf(p.id).filter(function(x){return x.user_id===USER.id})[0],r;
+  var keep=(RVD.media||[]).slice(),old=rvMedia(mine),tot=(RVD.add||[]).length;
+  for(var ui=0;ui<tot;ui++){busy('rvgo',1,'Uploading '+(ui+1)+' of '+tot+'…');keep.push(await rvUp(RVD.add[ui]))}
+  if(tot)await signAll('chat-media',keep.map(function(m){return m.p}));
+  var mj=JSON.stringify(keep.map(function(m){return{p:m.p,k:m.k}})),gone=old.filter(function(o){return !keep.some(function(k){return k.p===o.p})});
+  if(mine)r=await sb.from('reviews').update({rating:RVD.stars,text:t,name:rvName(),edited_by_store:false,media:mj}).eq('id',mine.id);
+  else r=await sb.from('reviews').insert({product_id:p.id,user_id:USER.id,name:rvName(),rating:RVD.stars,text:t,media:mj});
+  if(r.error)throw r.error;if(gone.length)sb.storage.from('chat-media').remove(gone.map(function(g){return g.p}));await revFetchAll();RVD.pid=null;done=true;pdDraw(false);revUi();toast(mine?'Review updated ✓':'Thanks for your review ✓')}
+ catch(e){toast('Could not save your review. Please try again.')}
+ if(!done)busy('rvgo',0)}
+async function revDelMine(){var p=pb(PDID);if(!p||!USER)return;if(!await ask('Delete your review?'))return;await revFetchAll();var mine=rvOf(p.id).filter(function(x){return x.user_id===USER.id})[0];if(!mine)return;
+ var r=await sb.from('reviews').delete().eq('id',mine.id);if(r.error)return toast('Could not delete. Please try again.');var _g=rvMedia(mine);if(_g.length)sb.storage.from('chat-media').remove(_g.map(function(g){return g.p}));
+ RV.all=RV.all.filter(function(x){return x.id!==mine.id});revStats();RVD.pid=null;pdDraw(false);revUi();toast('Review deleted')}
+
+/* --- store side: admin and managers --- */
+function rvWho(x){var c=custOf(x.user_id),nm=c?((c.first_name||'')+' '+(c.last_name||'')).trim():'';return{nm:nm||x.name||'Customer',un:c&&c.username?'@'+c.username:'',mb:c&&c.mobile?c.mobile:'',em:c?showMail(c.email||''):''}}
+function rvAdmCard(x){var w=rvWho(x),pr=pb(x.product_id);
+ return '<div class="oc"><div class="ohd"><b>'+(pr?esc(pr.e+' '+pr.n):'Deleted product')+'</b><small>'+rvDate(x.created_at)+'</small></div><div class="rvstars">'+stars(+x.rating)+' <small>'+(+x.rating)+'/5</small></div>'+
+ (RVA.ed===x.id?'<textarea id="rve_'+x.id+'" maxlength="500" style="min-height:90px">'+esc(x.text||'')+'</textarea><div style="display:flex;gap:8px"><button class="cta" onclick="revEditSave(\''+x.id+'\')">Save text</button><button class="tbtn mh" onclick="revEditCancel()">Cancel</button></div>':
+  '<p style="margin:6px 0;white-space:pre-wrap;word-break:break-word">'+(x.text?esc(x.text):'<i style="color:var(--muted)">No written review</i>')+'</p>'+(x.edited_by_store?'<small>✎ Edited by store'+(x.edited_at?' · '+rvDate(x.edited_at):'')+'</small>':'')+
+  '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="tbtn mh" onclick="revEdit(\''+x.id+'\')">✎ Edit text</button><button class="tbtn mh" style="color:#ff7b6b" onclick="revDel(\''+x.id+'\')">🗑 Delete</button></div>')+rvAdmMed(x)+
+ '<small class="rvwho">👤 '+esc(w.nm)+(w.un?' · '+esc(w.un):'')+(w.mb?' · <a href="tel:'+esc(w.mb)+'" style="color:inherit">📞 '+esc(w.mb)+'</a>':'')+(w.em?' · ✉ '+esc(w.em):'')+'</small></div>'}
+function revFiltered(){var q=(RVA.q||'').trim().toLowerCase(),st=+RVA.st||0;return (RV.all||[]).filter(function(x){if(st&&Math.round(+x.rating)!==st)return false;if(!q)return true;var w=rvWho(x),pr=pb(x.product_id);return [x.text,w.nm,w.un,w.mb,w.em,pr&&pr.n].join(' ').toLowerCase().indexOf(q)>=0})}
+function revList(){var el=$('rvl');if(!el)return;var a=revFiltered(),n=$('rvn');if(n)n.textContent='Reviews ('+a.length+(a.length!==(RV.all||[]).length?' of '+RV.all.length:'')+')';el.innerHTML=a.length?a.map(rvAdmCard).join(''):'<p>No reviews found.</p>'}
+function admRev(){
+ if(RV.all===null||CUST===null){if(!RVA.load){RVA.load=1;Promise.all([RV.all===null?revFetchAll():0,CUST===null?loadCust():0]).catch(function(){}).then(function(){RVA.load=0;if(RV.all===null)RV.all=[];if(CUST===null)CUST=[];if(VIEW==='adm-Reviews')edKeep(function(){adm('Reviews')})})}
+  return '<div class="ohd"><p>Loading reviews…</p></div>'}
+ var a=revFiltered();
+ return '<div class="ohd"><p id="rvn">Reviews ('+a.length+(a.length!==RV.all.length?' of '+RV.all.length:'')+')</p><button class="tbtn mh rf" onclick="rf(this,\'rev\')"><i class="rfi">↻</i> Refresh</button></div>'+
+  '<input id="rvq" placeholder="Search name, mobile, product or text" oninput="RVA.q=this.value;revList()" value="'+esc(RVA.q)+'">'+
+  '<label>Show<select onchange="RVA.st=this.value;revList()">'+[['0','All ratings'],['5','5 stars'],['4','4 stars'],['3','3 stars'],['2','2 stars'],['1','1 star']].map(function(o){return '<option value="'+o[0]+'"'+(RVA.st===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+
+  '<div id="rvl" style="display:flex;flex-direction:column;gap:10px">'+(a.length?a.map(rvAdmCard).join(''):'<p>No reviews found.</p>')+'</div>'}
+function revEdit(id){RVA.ed=id;revList()}
+function revEditCancel(){RVA.ed=null;revList()}
+async function revEditSave(id){var el=$('rve_'+id);if(!el)return;var t=(el.value||'').trim().slice(0,500),at=new Date().toISOString();
+ var r=await sb.from('reviews').update({text:t,edited_by_store:true,edited_at:at}).eq('id',id);if(r.error)return toast('Could not save. Please try again.');
+ var x=RV.all.filter(function(a){return a.id===id})[0];if(x){x.text=t;x.edited_by_store=true;x.edited_at=at}RVA.ed=null;revList();toast('Review updated ✓')}
+async function revDel(id){if(!await ask('Delete this review? This cannot be undone.'))return;var _x=(RV.all||[]).filter(function(a){return a.id===id})[0],r=await sb.from('reviews').delete().eq('id',id);if(r.error)return toast('Could not delete. Please try again.');if(_x&&rvMedia(_x).length)sb.storage.from('chat-media').remove(rvMedia(_x).map(function(g){return g.p}));
+ RV.all=RV.all.filter(function(a){return a.id!==id});revStats();revList();revUi();toast('Review deleted')}
+
+/* ===== v13: photos and videos in reviews (up to 20 per review; same upload method as chat) ===== */
+function rvMedia(x){if(!x)return[];var m=x.media;if(typeof m==='string'){try{m=JSON.parse(m)}catch(e){m=[]}}return Array.isArray(m)?m.filter(function(a){return a&&a.p}):[]}
+var _rf13=revFetchAll;revFetchAll=async function(){var ok=await _rf13.apply(this,arguments);if(ok){try{var ps=[];(RV.all||[]).forEach(function(x){rvMedia(x).forEach(function(m){ps.push(m.p)})});if(ps.length)await signAll('chat-media',ps)}catch(e){}}return ok};
+async function rvUp(a){var path=USER.id+'/reviews/'+rid()+(a.x||'.jpg');await upload('chat-media',path,a.b);return{p:path,k:a.v?'video':'image'}}
+function rvThumbs(){return (RVD.media||[]).map(function(m,i){var u=surl('chat-media',m.p);return '<span class="rvt">'+(u?(m.k==='video'?'<video src="'+esc(u)+'#t=0.1" muted playsinline preload="metadata"></video><i class="vpl">▶</i>':'<img src="'+esc(u)+'" alt="">'):'')+'<button type="button" class="x" onclick="revRm(\'k\','+i+')" aria-label="Remove">✕</button></span>'}).join('')+
+ (RVD.add||[]).map(function(a,i){return '<span class="rvt">'+(a.v?'<video src="'+esc(a.u)+'#t=0.1" muted playsinline preload="metadata"></video><i class="vpl">▶</i>':'<img src="'+esc(a.u)+'" alt="">')+'<button type="button" class="x" onclick="revRm(\'a\','+i+')" aria-label="Remove">✕</button></span>'}).join('')}
+function rvMedHtml(){return '<div class="rvmed"><div class="rvth" id="rvth">'+rvThumbs()+'</div>'+fpick('Add photos or videos','multiple accept="image/*,video/*"','revPick(this)','rvfn')+'</div>'}
+function revDrawMed(){var t=$('rvth'),n=$('rvfn');if(t)t.innerHTML=rvThumbs();if(n){var c=(RVD.media||[]).length+(RVD.add||[]).length;n.textContent=c?c+' of 20 added':'Up to 20 photos or videos (video max 20 MB)'}}
+async function revPick(inp){var fs=Array.from(inp.files||[]);inp.value='';if(!fs.length)return;RVD.media=RVD.media||[];RVD.add=RVD.add||[];
+ var room=20-RVD.media.length-RVD.add.length;if(room<=0)return toast('You can add up to 20 photos or videos.');if(fs.length>room)toast('Only the first '+room+' file(s) were added.');
+ var n=$('rvfn');if(n)n.textContent='Preparing files…';
+ for(var i=0;i<Math.min(room,fs.length);i++){var f=fs[i];try{
+  if(/^video\//.test(f.type)){if(f.size>20*1024*1024){toast('A video is too large. The limit is 20 MB.');continue}RVD.add.push({b:f,u:URL.createObjectURL(f),v:1,x:'.'+(((f.name||'').split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'')||'mp4')})}
+  else if(/^image\//.test(f.type)){var b=await shrink(f,1400,.82);RVD.add.push({b:b,u:URL.createObjectURL(b),x:'.jpg'})}
+  else toast('Only photos and videos can be added.')}catch(e){toast((e&&e.message)||'Could not add this file.')}}
+ revDrawMed()}
+function revRm(kind,i){if(kind==='k')(RVD.media||[]).splice(i,1);else{var a=(RVD.add||[]).splice(i,1)[0];try{URL.revokeObjectURL(a.u)}catch(e){}}revDrawMed()}
+/* public list: thumbnails under each review, tap to view big */
+function rvGrid(x){var L=rvMedia(x);if(!L.length)return '';var sh=L.slice(0,8);
+ return '<div class="rvgrid">'+sh.map(function(m,i){var u=surl('chat-media',m.p);if(!u)return '';return '<button type="button" class="rvt" onclick="rvOpen(\''+x.id+'\','+i+')" aria-label="Open">'+mth(u)+(i===7&&L.length>8?'<span class="rvmo">+'+(L.length-8)+'</span>':'')+'</button>'}).join('')+'</div>'}
+/* store side: see the media and remove a single photo or video */
+function rvAdmMed(x){var L=rvMedia(x);if(!L.length)return '';return '<div class="rvgrid">'+L.map(function(m,i){var u=surl('chat-media',m.p);if(!u)return '';return '<span class="rvt"><button type="button" class="rvo" onclick="rvOpen(\''+x.id+'\','+i+')" aria-label="Open">'+mth(u)+'</button><button type="button" class="x" onclick="revStoreRm(\''+x.id+'\','+i+')" aria-label="Remove this file">✕</button></span>'}).join('')+'</div>'}
+async function revStoreRm(id,i){var x=(RV.all||[]).filter(function(a){return a.id===id})[0];if(!x)return;var L=rvMedia(x);if(!L[i])return;if(!await ask('Remove this photo or video from the review?'))return;
+ var gone=L.splice(i,1)[0],at=new Date().toISOString(),r=await sb.from('reviews').update({media:JSON.stringify(L),edited_by_store:true,edited_at:at}).eq('id',id);if(r.error)return toast('Could not remove. Please try again.');
+ x.media=JSON.stringify(L);x.edited_by_store=true;x.edited_at=at;sb.storage.from('chat-media').remove([gone.p]);revList();toast('Removed ✓')}
+/* big viewer with swipe */
+var LB={list:[],i:0};
+function rvOpen(id,i){var x=(RV.all||[]).filter(function(a){return String(a.id)===String(id)})[0];if(!x)return;LB.list=rvMedia(x).map(function(m){return{u:surl('chat-media',m.p),k:m.k}}).filter(function(m){return m.u});if(!LB.list.length)return;LB.i=Math.max(0,Math.min(i,LB.list.length-1));lbDraw()}
+function lbDraw(){var o=$('rvlb');if(!o){o=document.createElement('div');o.id='rvlb';document.body.appendChild(o)}var m=LB.list[LB.i];o.className='on';
+ o.innerHTML='<button type="button" class="lbx" onclick="lbClose()" aria-label="Close">✕</button>'+(LB.list.length>1?'<button type="button" class="lbp" onclick="lbGo(-1)" aria-label="Previous">‹</button><button type="button" class="lbn" onclick="lbGo(1)" aria-label="Next">›</button>':'')+'<div class="lbm">'+(m.k==='video'?'<video src="'+esc(m.u)+'" controls playsinline autoplay></video>':'<img src="'+esc(m.u)+'" alt="">')+'</div><div class="lbc">'+(LB.i+1)+' / '+LB.list.length+'</div>'}
+function lbGo(d){LB.i=(LB.i+d+LB.list.length)%LB.list.length;lbDraw()}
+function lbClose(){var o=$('rvlb');if(o){o.className='';o.innerHTML=''}}
+(function(){var sx=0;document.addEventListener('touchstart',function(e){if(e.target.closest&&e.target.closest('#rvlb'))sx=e.touches[0].clientX},{passive:true});
+ document.addEventListener('touchend',function(e){var o=$('rvlb');if(!o||o.className!=='on'||!(e.target.closest&&e.target.closest('#rvlb')))return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60&&LB.list.length>1)lbGo(dx<0?1:-1)},{passive:true})})();
+
+/* ===== v14: Reviews section for the store: who wrote it (photo, name, username), edit, select and remove photos ===== */
+var RVSEL={on:null,sel:{}};
+function rvSelOn(id){RVSEL={on:id,sel:{}};revList()}
+function rvSelOff(){RVSEL={on:null,sel:{}};revList()}
+function rvSelTog(i){RVSEL.sel[i]=!RVSEL.sel[i];revList()}
+function rvSelAll(id){var x=(RV.all||[]).filter(function(a){return a.id===id})[0],L=rvMedia(x),all=L.every(function(m,i){return RVSEL.sel[i]});RVSEL.sel={};if(!all)L.forEach(function(m,i){RVSEL.sel[i]=true});revList()}
+function rvSelN(){var n=0;for(var k in RVSEL.sel)if(RVSEL.sel[k])n++;return n}
+async function rvSetMedia(id,keepL,goneL,msg){var at=new Date().toISOString(),r=await sb.from('reviews').update({media:JSON.stringify(keepL),edited_by_store:true,edited_at:at}).eq('id',id);if(r.error)return toast('Could not save. Please try again.');
+ var x=(RV.all||[]).filter(function(a){return a.id===id})[0];if(x){x.media=JSON.stringify(keepL);x.edited_by_store=true;x.edited_at=at}
+ if(goneL.length)sb.storage.from('chat-media').remove(goneL.map(function(g){return g.p}));RVSEL={on:null,sel:{}};revList();toast(msg)}
+async function rvSelDel(id){var x=(RV.all||[]).filter(function(a){return a.id===id})[0];if(!x)return;var L=rvMedia(x),n=rvSelN();if(!n)return toast('Tap the photos or videos you want to remove.');
+ if(!await ask('Remove '+n+' selected '+(n>1?'files':'file')+' from this review?'))return;
+ var keep=[],gone=[];L.forEach(function(m,i){(RVSEL.sel[i]?gone:keep).push(m)});rvSetMedia(id,keep,gone,'Removed ✓')}
+async function rvAllDel(id){var x=(RV.all||[]).filter(function(a){return a.id===id})[0];if(!x)return;var L=rvMedia(x);if(!L.length)return;
+ if(!await ask('Remove all '+L.length+' photos and videos from this review?'))return;rvSetMedia(id,[],L,'All removed ✓')}
+function rvAdmMed(x){var L=rvMedia(x);if(!L.length)return '';var on=RVSEL.on===x.id,q='\''+x.id+'\'';
+ var g='<div class="rvgrid">'+L.map(function(m,i){var u=surl('chat-media',m.p);if(!u)return '';
+  return on?'<button type="button" class="rvt'+(RVSEL.sel[i]?' on':'')+'" onclick="rvSelTog('+i+')" aria-label="Select">'+mth(u)+'<span class="rvck">'+(RVSEL.sel[i]?'✓':'')+'</span></button>':'<button type="button" class="rvt" onclick="rvOpen('+q+','+i+')" aria-label="Open">'+mth(u)+'</button>'}).join('')+'</div>';
+ var bar=on?'<div class="rvbar2"><button class="tbtn mh" onclick="rvSelAll('+q+')">Select all</button><button class="tbtn mh" style="color:#C62828" onclick="rvSelDel('+q+')">🗑 Remove selected ('+rvSelN()+')</button><button class="tbtn mh" onclick="rvSelOff()">Cancel</button></div>':
+  '<div class="rvbar2"><button class="tbtn mh" onclick="rvSelOn('+q+')">☑ Select photos</button><button class="tbtn mh" style="color:#C62828" onclick="rvAllDel('+q+')">🗑 Remove all photos</button></div>';
+ return '<small class="cv">'+L.length+' photo'+(L.length>1?'s/videos':' or video')+'</small>'+g+bar}
+function rvAdmCard(x){var w=rvWho(x),pr=pb(x.product_id),c=custOf(x.user_id),q='\''+x.id+'\'',u={f:w.nm,pic:c&&c.avatar_path?surl('avatars',c.avatar_path):''},ed=RVA.ed===x.id;
+ return '<div class="oc rvc"><div class="rvu">'+av(u,46)+'<div class="rvun"><b>'+esc(w.nm)+'</b><small>'+(w.un?esc(w.un)+' · ':'')+rvDate(x.created_at)+'</small></div></div>'+
+  '<div class="rvpr">'+(pr?esc(pr.e+' '+pr.n):'Deleted product')+'</div>'+
+  (ed?'<label>Rating<select id="rvr_'+x.id+'">'+[5,4,3,2,1].map(function(k){return '<option value="'+k+'"'+(Math.round(+x.rating)===k?' selected':'')+'>'+k+' star'+(k>1?'s':'')+'</option>'}).join('')+'</select></label><label>Review text<textarea id="rve_'+x.id+'" maxlength="500" style="min-height:100px">'+esc(x.text||'')+'</textarea></label><div style="display:flex;gap:8px"><button class="cta" onclick="revEditSave('+q+')">Save changes</button><button class="tbtn mh" onclick="revEditCancel()">Cancel</button></div>':
+   '<div class="rvstars">'+stars(+x.rating)+' <small>'+(+x.rating)+'/5</small></div><p style="margin:2px 0;white-space:pre-wrap;word-break:break-word">'+(x.text?esc(x.text):'<i style="color:var(--muted)">No written review</i>')+'</p>'+(x.edited_by_store?'<small>✎ Edited by store'+(x.edited_at?' · '+rvDate(x.edited_at):'')+'</small>':''))+
+  rvAdmMed(x)+
+  (ed?'':'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="tbtn mh" onclick="revEdit('+q+')">✎ Change review</button><button class="tbtn mh" style="color:#C62828" onclick="revDel('+q+')">🗑 Delete review</button></div>')+
+  '<small class="rvwho">'+(w.mb?'<a href="tel:'+esc(w.mb)+'" style="color:inherit">📞 '+esc(w.mb)+'</a>':'')+(w.em?(w.mb?' · ':'')+'✉ '+esc(w.em):'')+'</small></div>'}
+async function revEditSave(id){var el=$('rve_'+id),rt=$('rvr_'+id);if(!el)return;var t=(el.value||'').trim().slice(0,500),st=rt?+rt.value:0,at=new Date().toISOString(),row={text:t,edited_by_store:true,edited_at:at};if(st>=1&&st<=5)row.rating=st;
+ var r=await sb.from('reviews').update(row).eq('id',id);if(r.error)return toast('Could not save. Please try again.');
+ var x=RV.all.filter(function(a){return a.id===id})[0];if(x){x.text=t;x.edited_by_store=true;x.edited_at=at;if(row.rating)x.rating=row.rating}RVA.ed=null;revStats();revList();revUi();toast('Review updated ✓')}
+
+/* ===== Owner setup: no admin details are stored in this file. The owner creates the account on first use. ===== */
+function ownerM(){M('<h2>Owner setup</h2><p>Create the store owner account. These details stay on this device only and are not written in the website file.</p><div class="two">'+fld('os_f','First name','text','autocomplete="given-name" maxlength="30"')+fld('os_l','Last name','text','autocomplete="family-name" maxlength="30"')+'</div>'+fld('os_m','Mobile number','tel','inputmode="numeric" maxlength="10" autocomplete="tel"')+fld('os_e','Email (optional)','email','autocomplete="email" autocapitalize="none"')+fld('os_p','Password (min 8 characters)','password','autocomplete="new-password"')+fld('os_p2','Confirm password','password','autocomplete="new-password"')+'<div class="err" id="er"></div><button class="cta" id="os_go" onclick="ownerSave()">Create owner account</button><button class="link" onclick="X()">Cancel</button>',0,'osetup')}
+function ownerSave(){var p=$('os_p').value;if(p!==$('os_p2').value)return bad('The two passwords do not match.');
+ var e=window.__demoOwner.create({first:$('os_f').value,last:$('os_l').value,mobile:$('os_m').value,email:$('os_e').value,password:pw(p)});if(e)return bad(e);toast('Owner account created. Please log in.');authM()}
+function ownerCheck(){if(location.hash!=='#owner-setup')return;try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+ if(!window.__demoOwner)return;if(window.__demoOwner.exists())return toast('An owner account already exists on this device.');ownerM()}
+window.addEventListener('hashchange',ownerCheck);
+
+(async function(){try{await boot();window.__ok=1;ownerCheck()}catch(e){window.__showErr(e)}})();
 </script>
 </body>
 </html>
