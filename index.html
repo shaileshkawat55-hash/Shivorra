@@ -875,7 +875,8 @@ async function loadProducts(){var q=await sb.from('products').select('*').order(
 async function loadSettings(){var r=await sb.from('store_settings').select('upi_id,whatsapp,qr_path,logo_text,logo_path,logo_style').eq('id',1).maybeSingle();if(r.data){SET.upi=r.data.upi_id||'';SET.wa=r.data.whatsapp||'';SET.qr=r.data.qr_path||'';SET.logo=r.data.logo_text||'Shivorra';SET.logoPath=r.data.logo_path||'';if(SET.logoPath)await signAll('product-images',[SET.logoPath]);SET.lstyle=r.data.logo_style||'';{var _s=lsGet();if(_s.img)await signAll('product-images',[_s.img])}applyLogo();if(SET.qr)await signAll('product-images',[SET.qr])}}
 function applyLogo(){var t=SET.logo||'Shivorra';$('lgt').textContent=t;$('ftn').textContent=t;$('chn').textContent=t+' Support';try{document.title=document.title.replace(applyLogo.last||'Shivorra',t)}catch(e){}applyLogo.last=t;if(!applyLogo.d)applyLogo.d=$('lg').src;var im=SET.logoPath&&surl('product-images',SET.logoPath);$('lg').src=im||applyLogo.d;wmApply();drawFoot();homeApply()}
 function qrSrc(){return (SET.qr&&surl('product-images',SET.qr))||QR}
-function cats(){var g=siteGet().cat;$('cats').style.setProperty('--cs',(({S:36,M:48,L:64})[g.size]||48)+'px');$('cats').innerHTML=C.map(function(c){return '<button class="chip'+(g.on?' wc':'')+'" data-cat="'+c+'" aria-pressed="'+(S.cat===c&&!S.wishOnly)+'">'+(g.on?'<span class="cc">'+catIco(c)+'</span>':'')+'<span>'+c+'</span></button>'}).join('')}
+function CSX(z){var n={S:54,M:72,L:96}[z];if(!n)n=parseFloat(z);if(!(n>0))n=72;n=Math.max(40,Math.min(130,n));return n/1.5}
+function cats(){var g=siteGet().cat;$('cats').style.setProperty('--cs',CSX(g.size)+'px');$('cats').innerHTML=C.map(function(c){return '<button class="chip'+(g.on?' wc':'')+'" data-cat="'+c+'" aria-pressed="'+(S.cat===c&&!S.wishOnly)+'">'+(g.on?'<span class="cc">'+catIco(c)+'</span>':'')+'<span>'+c+'</span></button>'}).join('')}
 function cdots(p){if(!p.vs.length)return '';return '<div class="cdots">'+p.vs.slice(0,5).map(function(v){return '<i style="background:'+esc(v.h||'#888')+'"></i>'}).join('')+(p.vs.length>5?'<small>+'+(p.vs.length-5)+'</small>':'')+'</div>'}
 function cd(p){return '<article class="card" data-id="'+p.id+'"'+(pFitRaw(p.id)?' data-pf="'+pFitRaw(p.id)+'"':'')+'><span class="off">'+p.d+'% off</span><button class="heart" data-w="'+p.id+'" aria-label="'+(S.wish[p.id]?'Remove from wishlist':'Save to wishlist')+'">'+(S.wish[p.id]?'❤️':'🤍')+'</button><div class="pic" style="background:'+esc(p.bg)+'">'+pic(p)+'</div><div class="info"><h3>'+esc(p.n)+'</h3>'+cdots(p)+'<div class="rate">'+(p.v?'<b>'+p.r+' ★</b>('+p.v.toLocaleString('en-IN')+')':'<b>New</b>')+'</div><div class="price">'+(p.from?'<small>From</small> ':'')+'<b>'+money(p.p)+'</b><s>'+money(p.m)+'</s></div><button class="add" data-a="'+p.id+'">Add to cart</button></div></article>'}
 function grid(){showFeat();navSync();
@@ -1397,7 +1398,7 @@ function hSync(){var H=ED.h;if(!H)return;var g=function(c){return [].map.call(do
  var cs=document.querySelector('.cs-on');if(cs){H.cat.on=cs.value==='1';H.cat.size=document.querySelector('.cs-sz').value}
  document.querySelectorAll('.cs-em').forEach(function(e){H.cat.em[e.dataset.c]=e.value.trim()})}
 function hInit(){if(!ED.h){var g=siteGet();ED.h={hero:Object.assign({},DHERO,g.hero||{}),rows:cl(g.rows===null?DROWS:g.rows),cat:cl(g.cat),rowsTouched:0}}return ED.h}
-function hpHtml(){var H=ED.h,g=H.cat,cs=({S:36,M:48,L:64})[g.size]||48;
+function hpHtml(){var H=ED.h,g=H.cat,cs=CSX(g.size);
  return '<div class="mban"><div class="mbt"><b>'+esc(H.hero.a)+' <span>'+esc(H.hero.b)+'</span></b><small>'+esc(H.hero.t)+'</small></div></div><div class="pvp">🚚 Free delivery · ↩️ 7-day returns · 🔒 Secure UPI</div>'+
  '<div class="pvc" style="--cs:'+cs+'px">'+C.map(function(c,i){return '<span class="chip'+(g.on?' wc':'')+'" aria-pressed="'+(i===0)+'">'+(g.on?'<span class="cc">'+catIco(c,g)+'</span>':'')+'<span>'+esc(c)+'</span></span>'}).join('')+'</div>'+
  (H.rows.length?H.rows.map(function(r){var it=r.h?rowItems(r):[];return '<div class="head" style="margin:8px 0 6px"><h2 style="font-size:1rem">'+esc(r.h||'…')+'</h2></div><div class="strip">'+it.map(mc).join('')+'</div>'}).join(''):'<p style="color:var(--muted)">No rows. Products start right after the categories.</p>')}
@@ -1413,7 +1414,7 @@ function admHome(){var H=hInit(),srcs=[['disc','Biggest discounts'],['rate','Top
  H.rows.map(function(r,i){return '<div class="edc"><div class="hrw"><input class="hr-h" maxlength="40" placeholder="Heading, e.g. 🔥 Hot deals" value="'+esc(r.h)+'"><div class="hrw2"><select class="hr-s">'+srcs.map(function(x){return '<option value="'+esc(x[0])+'"'+(x[0]===r.s?' selected':'')+'>'+esc(x[1])+'</option>'}).join('')+'</select><input class="hr-n" type="number" min="2" max="12" inputmode="numeric" value="'+(parseInt(r.n)||8)+'" aria-label="How many products"></div></div><small>The number is how many products show in this row (2 to 12).</small><div class="edb">'+(i?'<button class="link" onclick="hrMove('+i+',-1)">↑ Up</button>':'')+(i<H.rows.length-1?'<button class="link" onclick="hrMove('+i+',1)">↓ Down</button>':'')+'<button class="link" style="color:#ff7b6b" onclick="hrDel('+i+')">🗑 Remove row</button></div></div>'}).join('')+(H.rows.length?'':'<p>No rows. The homepage will go straight to the products.</p>')+
  (H.rows.length<6?'<button class="cta alt" onclick="hrAdd()">+ Add row</button>':'')+'<button class="cta" id="hs_r" onclick="hSaveRows()">Save rows</button><button class="link" onclick="hrReset()">↺ Back to the original 2 rows</button>'+
  '<h3 class="mh3">Category circles</h3><p>A small circle above All, Men, Women… Use your own picture or logo, or a single emoji.</p>'+
- '<label>Show circles<select class="cs-on"><option value="1"'+(H.cat.on?' selected':'')+'>Yes</option><option value="0"'+(H.cat.on?'':' selected')+'>No</option></select></label><label>Circle size<select class="cs-sz">'+['S','M','L'].map(function(k){return '<option value="'+k+'"'+(H.cat.size===k?' selected':'')+'>'+({S:'Small',M:'Medium',L:'Large'}[k])+'</option>'}).join('')+'</select></label>'+
+ '<label>Show circles<select class="cs-on"><option value="1"'+(H.cat.on?' selected':'')+'>Yes</option><option value="0"'+(H.cat.on?'':' selected')+'>No</option></select></label><label>Circle size: <b id="cszv">'+Math.round(CSX(H.cat.size)*1.5)+'</b> px<input type="range" class="cs-sz" min="48" max="130" step="2" value="'+Math.round(CSX(H.cat.size)*1.5)+'" oninput="document.getElementById(\'cszv\').textContent=this.value" style="width:100%"></label><small class="cv">Drag to make the category circles smaller or bigger. Tap Save category circles to apply.</small>'+
  C.map(function(c){var im=H.cat.img[c]&&surl('product-images',H.cat.img[c]);return '<div class="edc"><div class="ccrow"><span class="cc">'+(im?'<img src="'+esc(im)+'" alt="">':esc(H.cat.em[c]||DEM[c]||'🏷️'))+'</span><div class="ccf"><b>'+esc(c)+'</b><input class="cs-em" data-c="'+esc(c)+'" maxlength="4" placeholder="Emoji (if no picture)" value="'+esc(H.cat.em[c]||'')+'"></div></div>'+fpick(im?'Change picture':'Upload picture / logo','','catPicked(this,\''+esc(c)+'\')')+(H.cat.img[c]?'<button class="link" style="align-self:flex-start" onclick="catNoImg(\''+esc(c)+'\')">Remove picture</button>':'')+'</div>'}).join('')+
  '<button class="cta" id="hs_c" onclick="hSaveCat()">Save category circles</button></div>'}
 function hRedraw(){edKeep(function(){adm()})}
@@ -2747,5 +2748,26 @@ var a=$('menuBtn'),b=$('ba');if(a)a.onclick=menu;if(b)b.onclick=menu;
 })();
 </script>
 
+<script>
+/* ===== v22: log in with the email that was added to a mobile-number account ===== */
+(function(){
+var _dl=doLogin;
+doLogin=async function(isEmail){
+ var hid='';
+ if(isEmail){
+  try{
+   var e=($('li').value||'').trim().toLowerCase();
+   if(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){
+    var r=await sb.rpc('login_email_for',{p_email:e});
+    if(r&&!r.error&&typeof r.data==='string'&&r.data)hid=r.data;
+   }
+  }catch(x){}
+ }
+ var a=sb&&sb.auth,o=a&&a.signInWithPassword;
+ if(hid&&o){a.signInWithPassword=function(x){a.signInWithPassword=o;if(x&&x.email)x.email=hid;return o.call(a,x)}}
+ try{return await _dl(isEmail)}finally{if(a&&o&&a.signInWithPassword!==o)a.signInWithPassword=o}
+};
+})();
+</script>
 </body>
 </html>
