@@ -601,6 +601,19 @@ main .cats .wrap{max-width:none;margin:0;padding:6px 2px 8px}
 .txr .txrs{flex:none;width:38px;height:42px;border-radius:10px;border:1px solid var(--line);color:var(--muted);font-size:1rem}
 .txr.chg{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
 .txsave{position:sticky;bottom:0;z-index:5;background:linear-gradient(to top,var(--surface) 75%,transparent);padding:8px 0 2px}.txsave .cta{padding:11px 16px}
+
+/* ===== v19: manager page — same look as the customer page (centered photo, serif name, tier-style badge, tabs) ===== */
+.mgx>summary{display:flex;align-items:center;gap:12px;cursor:pointer;list-style:none}
+.mgx>summary::-webkit-details-marker{display:none}
+.mgx>summary .mst{flex:1;min-width:0;display:flex;flex-direction:column}
+.mgx>summary .mst small{color:var(--muted)}
+.mgx>summary::after{content:"▾";color:var(--muted);transition:transform .15s}
+.mgx[open]>summary::after{transform:rotate(180deg)}
+.mgh{text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;margin:10px 0 4px}
+.mgh h3{margin:6px 0 0;font-family:var(--f-serif);font-weight:700;font-size:1.35rem}
+.mgh .un{color:var(--muted);font-size:.9rem}
+.mgb{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.tier.t-light{background:#EAF1FF;color:#1D3F8C;border-color:#9DB8F2}
 </style>
 <style>
 #cats .chip.wc{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:4px 6px!important;min-width:64px;color:var(--muted)}
@@ -2583,6 +2596,37 @@ admTx=function(){if(!TXQ.rows)TXQ.rows=txScan();hInit();setTimeout(function(){if
  '<details class="oc"><summary><b>+ Add a text manually</b></summary><label>Original text (exactly as shown)<input id="txo" maxlength="160"></label><label>New text<input id="txn" maxlength="500"></label><button class="cta" onclick="txAddGo()">Add to list</button></details>'+
  '<div id="txl" style="display:flex;flex-direction:column;gap:10px">'+(TXQ.cat==='All'?txGroups(l,txMap()):txRows(l,txMap()))+'</div><div class="err" id="er"></div>'+
  '<div class="txsave"><button class="cta" id="txsv" onclick="txSave()">Save texts</button></div><button class="link" style="color:#C62828" onclick="txResetAll()">Reset all texts to original</button></div>'};
+
+/* ===== v19: manager page redesign ===== */
+var MTAB={};
+var MBP=[['mgr','🛡️','Manager'],['light','🔹','Light'],['gold','🥇','Gold'],['diamond','💎','Diamond'],['senior','⭐','Senior Manager'],['head','👑','Head Manager']];
+function mgbCls(t){t=String(t||'').toLowerCase();return /diamond|head/.test(t)?'t-diamond':/gold|senior/.test(t)?'t-gold':/light/.test(t)?'t-light':''}
+function mgBadgeHtml(id){var b=mgBadge(id);return '<span class="tier '+mgbCls(b.t)+'">'+esc(b.e)+' '+esc(b.t)+'</span>'}
+async function mgrBadgeSet(id,i){i=parseInt(i);var p=MBP[i];if(!p)return;var map=Object.assign({},(lsRaw().site||{}).mbadge||{});if(i===0)delete map[id];else map[id]={t:p[2],e:p[1]};
+ try{await siteSave({mbadge:map})}catch(e){return toast('Could not save the badge. Please try again.')}MOPEN[id]=true;toast('Badge changed ✓');adm('Managers')}
+function mgrTab(id,t){MTAB[id]=t;MOPEN[id]=true;adm('Managers')}
+roleTag=(function(old){return function(id){if(ROLEMAP[id]==='manager')return ' '+mgBadgeHtml(id);return old(id)}})(roleTag);
+function mgrView(m){var tab=MTAB[m.id]||'Details',b=mgBadge(m.id),nm=String(m.nm||'').split(' '),on=m.perms.length,
+ bi=MBP.map(function(p){return p[2]}).indexOf(b.t),
+ h='<div class="mgh">'+av({f:m.nm,pic:m.pic},88)+'<h3>'+esc(m.nm)+'</h3>'+(m.un?'<div class="un">@'+esc(m.un)+'</div>':'')+'<div>'+mgBadgeHtml(m.id)+'</div></div>'+
+ '<div class="tabs">'+['Details','Roles','Edit'].map(function(t){return '<button aria-pressed="'+(tab===t)+'" onclick="mgrTab(\''+m.id+'\',\''+t+'\')">'+t+(t==='Roles'?' ('+on+')':'')+'</button>'}).join('')+'</div>';
+ if(tab==='Details')h+='<div class="oc"><small>Mobile</small><b>'+esc(m.mob||'-')+'</b><small>Email</small><b>'+esc(m.em||'-')+'</b><small>Username</small><b>'+(m.un?'@'+esc(m.un):'-')+'</b><small>Joined</small><b>'+(m.joined?dt(m.joined):'-')+'</b><small>Sections allowed</small><b>'+on+' of '+ALLP.length+'</b>'+
+  '<label>Manager badge<select onchange="mgrBadgeSet(\''+m.id+'\',this.value)">'+MBP.map(function(p,i){return '<option value="'+i+'"'+(i===bi?' selected':'')+'>'+p[1]+' '+p[2]+'</option>'}).join('')+(bi<0?'<option value="-1" selected disabled>'+esc(b.e)+' '+esc(b.t)+' (custom)</option>':'')+'</select></label>'+
+  (m.pwh?'<div class="cprow" style="display:flex"><small>Password</small><b id="pwv_'+m.id+'">••••••••</b><button class="link" onclick="mgrPw(\''+m.id+'\',this)">👁 Show</button></div>':'<small>Password is not saved here. Set a new one in the Edit tab to see it here.</small>')+'</div>';
+ else if(tab==='Roles')h+='<div class="oc mgb"><small>Roles are saved as soon as you tick or untick.</small>'+ALLP.map(function(k){return '<label class="chk"><input type="checkbox" id="mc_'+m.id+'_'+k+'" '+(m.perms.indexOf(k)>=0?'checked':'')+' onchange="mgrToggle(\''+m.id+'\',\''+k+'\',this.checked)"> '+MPN[k]+'</label>'}).join('')+'</div>';
+ else h+='<div class="oc mgb">'+fpick('Change profile photo','accept="image/*"','mgrPhoto(\''+m.id+'\',this)','mgph_'+m.id)+
+  '<div class="two">'+fld('mf_'+m.id,'First name','text','maxlength="30" value="'+esc(nm[0]||'')+'"')+fld('ml_'+m.id,'Last name','text','maxlength="30" value="'+esc(nm.slice(1).join(' '))+'"')+'</div>'+
+  fld('mm_'+m.id,'Mobile number','tel','inputmode="numeric" maxlength="10" value="'+esc(m.mob||'')+'"')+'<small>This changes the number shown for this manager. Their login stays the same.</small>'+
+  '<label>Custom badge</label><div class="two"><select id="mbe_'+m.id+'">'+MBE.map(function(x){return '<option'+(x===b.e?' selected':'')+'>'+x+'</option>'}).join('')+'</select><input id="mb_'+m.id+'" maxlength="20" value="'+esc(b.t)+'" placeholder="e.g. Senior Manager"></div>'+
+  '<button class="cta" onclick="mgrProfSave(\''+m.id+'\')">Save profile</button>'+
+  fld('mu_'+m.id,'Username','text','autocapitalize="none" value="'+esc(m.un)+'"')+fld('mp_'+m.id,'New password (leave empty to keep)','text','autocomplete="off" autocapitalize="none"')+
+  '<button class="cta alt" onclick="mgrEdit(\''+m.id+'\')">Save username / password</button><button class="link" style="color:#ff7b6b;align-self:flex-start" onclick="mgrDel(\''+m.id+'\')">🗑 Remove manager</button></div>';
+ return h}
+admMgr=function(){if(MGRS===null)return '<p>Loading…</p>';var MX=siteGet().maxMgr,def=lsj('shv_mgr_def',['Products']);
+ var h='<div class="ohd"><p>Managers ('+MGRS.length+' of '+MX+'). Tap a manager to open.</p></div>'+MGRS.map(function(m){return '<details class="oc mgx"'+(MOPEN[m.id]?' open':'')+' ontoggle="MOPEN[\''+m.id+'\']=this.open"><summary>'+av({f:m.nm,pic:m.pic},48)+'<span class="mst"><b>'+esc(m.nm)+'</b><small>'+(m.un?'@'+esc(m.un):'No username yet')+'</small></span>'+mgBadgeHtml(m.id)+'</summary>'+mgrView(m)+'</details>'}).join('');
+ if(MGRS.length<MX)h+='<h3 class="mh3">Add a manager</h3><p>Or open a customer and use ⋮ → Make manager. Roles you pick here are remembered for the next manager.</p>'+fld('mgn','Name','text','autocomplete="off" maxlength="40"')+fld('mgl','Email or mobile number','text','autocomplete="off" autocapitalize="none" placeholder="name@gmail.com or 10-digit number"')+fld('mgp','Password','text','autocomplete="off" autocapitalize="none"')+'<label>Access</label>'+ALLP.map(function(k){return '<label class="chk"><input type="checkbox" id="mgk_'+k+'"'+(def.indexOf(k)>=0?' checked':'')+'> '+MPN[k]+'</label>'}).join('')+'<div class="err" id="er"></div><button class="cta" onclick="mgrAdd()">Add manager</button>';
+ else h+='<p>You have reached the limit of '+MX+' managers.</p>';
+ return h+'<h3 class="mh3">Number of managers allowed</h3>'+fld('mmx','Maximum managers (1 to 50)','number','min="1" max="50" inputmode="numeric" value="'+MX+'"')+'<button class="cta" onclick="saveMax()">Save limit</button>'};
 </script>
 <style>
 #hpv .txscr{display:flex;flex-direction:column;gap:12px;padding:14px;background:var(--surface)}
