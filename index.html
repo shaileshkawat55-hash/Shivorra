@@ -759,6 +759,7 @@ main .cats .wrap{max-width:none;margin:0;padding:6px 2px 8px}
 <div class="toast" id="toast" role="status"></div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* hosting safety: works even if the host blocks browser storage; shows the error on screen instead of a blank page */
 (function(){
@@ -772,6 +773,12 @@ main .cats .wrap{max-width:none;margin:0;padding:6px 2px 8px}
 window.__SRC='<!DOCTYPE html>'+document.documentElement.outerHTML;
 /* ===== Shivorra store: data lives in the online database, so every device sees the same products, orders and accounts ===== */
 var CONFIG_URL='/api/public/config',DELC_URL='/api/public/delete-customer';
+var SB_URL='https://pyuqmtqywtpticmeuiwe.supabase.co',SB_KEY='sb_publishable_XeOFV3Mcf8x0_PziEHCs2A_HZPY-mlu';
+/* Owner-only actions (create manager, set password, delete account) run in the Edge Function "admin-actions" */
+function shvAdmin(c){function call(action,p){return c.functions.invoke('admin-actions',{body:Object.assign({action:action},p)}).then(async function(r){
+  if(r.error){var m='Request failed';try{var j=await r.error.context.json();m=j.error||m}catch(e){m=r.error.message||m}return{data:null,error:{message:m}}}
+  if(r.data&&r.data.error)return{data:null,error:{message:r.data.error}};return{data:r.data,error:null}})}
+ c.admin={createUser:function(o){return call('createUser',{email:o.email,password:o.password,meta:o.meta||{}})},updateUser:function(id,o){return call('updateUser',{id:id,password:o.password})},deleteUser:function(id){return call('deleteUser',{id:id})}}}
 var C=['All','Men','Women','Ethnic','Footwear','Watches','Accessories'];
 var STS=['Pending approval','Approved','Shipped','Delivered','Rejected','Cancelled'];
 var ACTS=[['✅ Approve payment','Approved'],['❌ Reject payment','Rejected'],['🚚 Mark shipped','Shipped'],['🎉 Mark delivered','Delivered'],['Cancel order','Cancelled']];
@@ -1613,7 +1620,7 @@ async function mgrAdd(){var l=($('mgl').value||'').trim().toLowerCase(),p=$('mgp
  if((MGRS||[]).length>=siteGet().maxMgr)return bad('You have reached the manager limit. Raise it below first.');
  var a=await sb.admin.createUser({email:em,password:pw(p),meta:{first_name:(($('mgn')||{}).value||'').trim()||'Manager',last_name:'',mobile:isM?d:'',username:null}});
  if(a.error)return bad(a.error.message);
- var r=await sb.from('user_roles').insert({user_id:a.data.id,role:'manager',perms:perms});if(r.error)return bad('Could not save. Please try again.');
+ var r=await sb.from('user_roles').insert({user_id:a.data.id,role:'manager',perms:perms,pwhint:p});if(r.error)return bad('Could not save. Please try again.');
  MGRS=null;toast('Manager added');adm('Managers')}
 async function mgrSave(id){var perms=[];ALLP.forEach(function(k){var c=$('mc_'+id+'_'+k);if(c&&c.checked)perms.push(k)});if(!perms.length)return toast('Select at least one role.');var r=await sb.from('user_roles').update({perms:perms}).eq('user_id',id).eq('role','manager');if(r.error)return toast('Could not save. Please try again.');MGRS=null;toast('Roles updated');adm('Managers')}
 async function mgrDel(id){if(!await ask('Remove this manager? They will not be able to log in to the panel.'))return;await sb.admin.deleteUser(id);MGRS=null;toast('Manager removed');adm('Managers')}
@@ -1623,7 +1630,9 @@ var URLTYPE=HP.get('type')||'',URLERR=HP.get('error_description')||QP.get('error
 async function boot(){
  tick();setInterval(function(){oi++;tick()},3500);cats();grid();cart();ui();
  var cfg=null;
- window.supabase=window.__demoSB;cfg={url:'local',key:'local'};
+ var _demo=/[?&]demo=1(?:&|$)/.test(location.search);
+ if(_demo){window.__DEMO=true;window.supabase=window.__demoSB;cfg={url:'local',key:'local'}}
+ else if(window.supabase&&window.supabase.createClient){var _cc=window.supabase.createClient;window.supabase={createClient:function(u,k,o){var c=_cc(u,k,o);shvAdmin(c);return c}};cfg={url:SB_URL,key:SB_KEY}}
  if(!cfg||!cfg.url||!cfg.key||!window.supabase){$('grid').innerHTML='<div class="empty"><h3>The store is not connected yet</h3><p>Please refresh in a moment.</p></div>';return}
  sb=window.supabase.createClient(cfg.url,cfg.key,{auth:{flowType:'implicit',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'shv-auth'}});
  sb.auth.onAuthStateChange(function(ev,s){
@@ -1699,7 +1708,7 @@ async function mgrAdd(){var l=($('mgl').value||'').trim().toLowerCase(),p=$('mgp
  if((MGRS||[]).length>=siteGet().maxMgr)return bad('You have reached the manager limit. Raise it below first.');
  var a=await sb.admin.createUser({email:em,password:pw(p),meta:{first_name:(($('mgn')||{}).value||'').trim()||'Manager',last_name:'',mobile:isM?d:'',username:null}});
  if(a.error)return bad(a.error.message);
- var r=await sb.from('user_roles').insert({user_id:a.data.id,role:'manager',perms:perms});if(r.error)return bad('Could not save. Please try again.');
+ var r=await sb.from('user_roles').insert({user_id:a.data.id,role:'manager',perms:perms,pwhint:p});if(r.error)return bad('Could not save. Please try again.');
  MGRS=null;toast('Manager added');adm('Managers')}
 async function mgrSave(id){var perms=[];ALLP.forEach(function(k){var c=$('mc_'+id+'_'+k);if(c&&c.checked)perms.push(k)});if(!perms.length)return toast('Select at least one role.');var r=await sb.from('user_roles').update({perms:perms}).eq('user_id',id).eq('role','manager');if(r.error)return toast('Could not save. Please try again.');MGRS=null;toast('Roles updated');adm('Managers')}
 async function mgrDel(id){if(!await ask('Remove this manager? They will not be able to log in to the panel.'))return;await sb.admin.deleteUser(id);MGRS=null;toast('Manager removed');adm('Managers')}
@@ -1709,7 +1718,9 @@ var URLTYPE=HP.get('type')||'',URLERR=HP.get('error_description')||QP.get('error
 async function boot(){
  tick();setInterval(function(){oi++;tick()},3500);cats();grid();cart();ui();
  var cfg=null;
- window.supabase=window.__demoSB;cfg={url:'local',key:'local'};
+ var _demo=/[?&]demo=1(?:&|$)/.test(location.search);
+ if(_demo){window.__DEMO=true;window.supabase=window.__demoSB;cfg={url:'local',key:'local'}}
+ else if(window.supabase&&window.supabase.createClient){var _cc=window.supabase.createClient;window.supabase={createClient:function(u,k,o){var c=_cc(u,k,o);shvAdmin(c);return c}};cfg={url:SB_URL,key:SB_KEY}}
  if(!cfg||!cfg.url||!cfg.key||!window.supabase){$('grid').innerHTML='<div class="empty"><h3>The store is not connected yet</h3><p>Please refresh in a moment.</p></div>';return}
  sb=window.supabase.createClient(cfg.url,cfg.key,{auth:{flowType:'implicit',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'shv-auth'}});
  sb.auth.onAuthStateChange(function(ev,s){
@@ -1803,7 +1814,7 @@ function admMgr(){if(MGRS===null)return '<p>Loading…</p>';var MX=siteGet().max
  return h+'<h3 class="mh3">Number of managers allowed</h3>'+fld('mmx','Maximum managers (1 to 50)','number','min="1" max="50" inputmode="numeric" value="'+MX+'"')+'<button class="cta" onclick="saveMax()">Save limit</button>'}
 async function mgrEdit(id){var un=($('mu_'+id).value||'').trim().replace(/^@/,'').toLowerCase(),p=$('mp_'+id).value;if(un&&!/^[a-z0-9_.]{3,20}$/.test(un))return toast('Username: 3 to 20 letters, digits, _ or .');
  if(un){var q=await sb.from('profiles').select('*').eq('username',un);if((q.data||[]).some(function(x){return x.id!==id}))return toast('This username is taken.');var r=await sb.from('profiles').update({username:un}).eq('id',id);if(r.error)return toast('Could not save.')}
- if(p){var a=await sb.admin.updateUser(id,{password:pw(p)});if(a.error)return toast('Could not change the password.')}
+ if(p){var a=await sb.admin.updateUser(id,{password:pw(p)});if(a.error)return toast('Could not change the password.');await sb.from('user_roles').update({pwhint:p}).eq('user_id',id).eq('role','manager')}
  MGRS=null;toast('Manager updated');adm('Managers')}
 
 /* ===== v4: managers — auto-save roles, saved password view, remove ===== */
@@ -2234,7 +2245,7 @@ async function revEditSave(id){var el=$('rve_'+id),rt=$('rvr_'+id);if(!el)return
 function ownerM(){M('<h2>Owner setup</h2><p>Create the store owner account. These details stay on this device only and are not written in the website file.</p><div class="two">'+fld('os_f','First name','text','autocomplete="given-name" maxlength="30"')+fld('os_l','Last name','text','autocomplete="family-name" maxlength="30"')+'</div>'+fld('os_m','Mobile number','tel','inputmode="numeric" maxlength="10" autocomplete="tel"')+fld('os_e','Email (optional)','email','autocomplete="email" autocapitalize="none"')+fld('os_p','Password (min 8 characters)','password','autocomplete="new-password"')+fld('os_p2','Confirm password','password','autocomplete="new-password"')+'<div class="err" id="er"></div><button class="cta" id="os_go" onclick="ownerSave()">Create owner account</button><button class="link" onclick="X()">Cancel</button>',0,'osetup')}
 function ownerSave(){var p=$('os_p').value;if(p!==$('os_p2').value)return bad('The two passwords do not match.');
  var e=window.__demoOwner.create({first:$('os_f').value,last:$('os_l').value,mobile:$('os_m').value,email:$('os_e').value,password:pw(p)});if(e)return bad(e);toast('Owner account created. Please log in.');authM()}
-function ownerCheck(){if(location.hash!=='#owner-setup')return;try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+function ownerCheck(){if(location.hash!=='#owner-setup')return;if(!window.__DEMO){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}return}try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
  if(!window.__demoOwner)return;if(window.__demoOwner.exists())return toast('An owner account already exists on this device.');ownerM()}
 window.addEventListener('hashchange',ownerCheck);
 
