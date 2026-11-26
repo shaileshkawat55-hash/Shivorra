@@ -775,7 +775,7 @@ window.__SRC='<!DOCTYPE html>'+document.documentElement.outerHTML;
 var CONFIG_URL='/api/public/config',DELC_URL='/api/public/delete-customer';
 var SB_URL='https://pyuqmtqywtpticmeuiwe.supabase.co',SB_KEY='sb_publishable_XeOFV3Mcf8x0_PziEHCs2A_HZPY-mlu';
 /* Owner-only actions (create manager, set password, delete account) run in the Edge Function "admin-actions" */
-function shvAdmin(c){function call(action,p){return c.functions.invoke('admin-actions',{body:Object.assign({action:action},p)}).then(async function(r){
+function shvAdmin(c){function call(action,p){return c.functions.invoke('swift-endpoint',{body:Object.assign({action:action},p)}).then(async function(r){
   if(r.error){var m='Request failed';try{var j=await r.error.context.json();m=j.error||m}catch(e){m=r.error.message||m}return{data:null,error:{message:m}}}
   if(r.data&&r.data.error)return{data:null,error:{message:r.data.error}};return{data:r.data,error:null}})}
  c.admin={createUser:function(o){return call('createUser',{email:o.email,password:o.password,meta:o.meta||{}})},updateUser:function(id,o){return call('updateUser',{id:id,password:o.password})},deleteUser:function(id){return call('deleteUser',{id:id})}}}
@@ -1181,7 +1181,7 @@ function msgHtml(m,mine,adminView){var t=esc(m.body||'');if(adminView)t=t.replac
  return '<div class="bub'+(mine?' u':'')+'">'+md+t+'<small>'+new Date(m.created_at).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+'</small></div>'}
 function drawConv(){var b=$('acb');if(!b)return;b.innerHTML=CHM.length?CHM.map(function(m){return msgHtml(m,m.sender==='admin',1)}).join(''):'<p>No messages.</p>';b.scrollTop=b.scrollHeight}
 async function admSend(){var i=$('aci');if(!i||!CHO)return;var v=i.value.trim();if(!v)return;i.value='';var r=await sb.from('chat_messages').insert({customer_id:CHO,sender:'admin',body:v});if(r.error){i.value=v;return toast('Could not send. Please try again.')}loadConv()}
-async function admFile(inp){var f=inp.files&&inp.files[0];inp.value='';if(!f||!CHO)return;try{var md=await chatUp(f,CHO);var r=await sb.from('chat_messages').insert({customer_id:CHO,sender:'admin',body:'',media_path:md.path,media_kind:md.k});if(r.error)throw r.error;loadConv()}catch(e){toast(e&&e.message&&!e.code?e.message:'Could not send the file.')}}
+async function admFile(inp){var f=inp.files&&inp.files[0];inp.value='';if(!f||!CHO)return;try{var md=await chatUp(f,CHO);var r=await sb.from('chat_messages').insert({customer_id:CHO,sender:'admin',body:'',media_path:md.path,media_kind:md.k});if(r.error)throw r.error;loadConv()}catch(e){toast((e&&e.message)?('Could not send: '+e.message):'Could not send the file.')}}
 async function delConv(){if(!CHO||!await ask('Delete this whole chat? The messages and photos will be removed for you and the customer.'))return;var id=CHO,paths=CHM.map(function(m){return m.media_path}).filter(Boolean);
  var r=await sb.from('chat_messages').delete().eq('customer_id',id).select('id');if(r.error)return toast('Could not delete the chat.');if(paths.length)sb.storage.from('chat-media').remove(paths);CHO=null;CHL=(CHL||[]).filter(function(c){return c.id!==id});adm('Chats');ui();toast('Chat deleted')}
 async function chatUp(f,folder){var k=/^image\//.test(f.type)?'image':/^video\//.test(f.type)?'video':'';if(!k)throw new Error('Only photos and videos can be sent.');var b=f,ext='.jpg';
@@ -1432,7 +1432,7 @@ function chatDraw(){var h='<div class="bub">Hey 👋 How can we help you today?\
 async function chatPost(row){row.customer_id=USER.id;row.sender='customer';var r=await sb.from('chat_messages').insert(row);if(r.error)throw r.error;await loadMsgs(true)}
 async function chatSend(){var i=$('chi'),v=i.value.trim();if(!v||!USER)return;i.value='';try{await chatPost({body:v})}catch(e){i.value=v;toast('Could not send. Check your internet and try again.')}}
 async function chatQ(k){CNOTE=QQ[k][1];try{await chatPost({body:QQ[k][0]})}catch(e){toast('Could not send. Please try again.')}}
-async function chatFile(f){if(!f||!USER)return;try{var md=await chatUp(f,USER.id);await chatPost({body:'',media_path:md.path,media_kind:md.k})}catch(e){toast(e&&e.message&&!e.code?e.message:'Could not send the file.')}}
+async function chatFile(f){if(!f||!USER)return;try{var md=await chatUp(f,USER.id);await chatPost({body:'',media_path:md.path,media_kind:md.k})}catch(e){toast((e&&e.message)?('Could not send: '+e.message):'Could not send the file.')}}
 $('chfile').addEventListener('change',function(e){var f=e.target.files[0];e.target.value='';chatFile(f)});
 $('chi').addEventListener('keydown',function(e){if(e.key==='Enter')chatSend()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('chat').classList.contains('on'))chatX()});
@@ -1767,7 +1767,7 @@ function acForm(delay){var u=me()||{},c=secChans(),k=AC.kind,L={password:'Passwo
 async function acSend(){var c=document.querySelector('input[name=sch]:checked');if(!c)return bad('Choose where to send the OTP.');busy('ssb',1,'Sending…');var r=await sb.rpc('otp_send',{p_channel:c.value});busy('ssb',0);if(r.error)return bad(r.error.message);AC.step=1;AC.sent=r.data.sent_to;AC.demo=r.data.demo_otp||'';acRe()}
 async function acSave(delay){var o=($('aot').value||'').trim(),v=$('anv').value,k=AC.kind;if(!/^\d{6}$/.test(o))return bad('Enter the 6-digit OTP.');
  if(k==='password'){if(v.length<8)return bad('Use at least 8 characters.');if(v!==$('anv2').value)return bad('The two passwords do not match.');v=pw(v)}
- busy('ssv',1,'Saving…');var r=await sb.rpc(delay?'password_request':'account_change',{p_otp:o,p_kind:k,p_new:v});busy('ssv',0);if(r.error)return bad(r.error.message);
+ busy('ssv',1,'Saving…');var r=await sb.rpc(delay?'password_request':'account_change',{p_otp:o,p_kind:k,p_new:v});busy('ssv',0);if(r.error)return bad(r.error.message);if(r.data&&r.data.error)return bad(r.data.error);
  AC={kind:'password',step:0,ch:'',sent:'',demo:''};
  if(delay){SEC.pend={at:r.data.activates_at,kind:k};toast('Change scheduled');adm('Security')}else{toast('Changed. Please wait…');setTimeout(function(){location.reload()},900)}}
 function admSec(){var kl={password:'Password',email:'Email',mobile:'Mobile number'};if(SEC.pend===undefined)return '<p>Loading…</p>';
@@ -1989,7 +1989,7 @@ async function emSend(){var v=($('emi').value||'').trim().toLowerCase();if(!/^[^
  busy('emb',1,'Sending…');var r=await sb.rpc('email_code_send',{p_email:v});busy('emb',0);if(r.error)return emErr(r.error.message||'Could not send the code.');
  EM.email=v;EM.step=1;EM.sent=r.data.sent_to;EM.demo=r.data.demo_otp||'';emRe()}
 async function emVerify(){var c=($('emc').value||'').trim();if(!/^\d{6}$/.test(c))return emErr('Enter the 6-digit code.');
- busy('emv',1,'Verifying…');var r=await sb.rpc('email_code_verify',{p_email:EM.email,p_code:c});busy('emv',0);if(r.error)return emErr(r.error.message||'Wrong code.');
+ busy('emv',1,'Verifying…');var r=await sb.rpc('email_code_verify',{p_email:EM.email,p_code:c});busy('emv',0);if(r.error)return emErr(r.error.message||'Wrong code.');if(r.data&&r.data.error)return emErr(r.data.error);
  var pr=await sb.from('profiles').select('*').eq('id',USER.id).single();if(pr.data)PROF=pr.data;EM={email:'',step:0,demo:'',sent:''};ui();toast('Email verified ✓');editProf()}
 var _editProf8=editProf;editProf=function(){_editProf8();if(!me())return;var m=document.querySelector('#ee')||null;
  var host=[].filter.call(document.querySelectorAll('label'),function(l){return l.textContent.trim()==='Profile picture'})[0]||document.querySelector('.err#er');if(!host)return;
@@ -2451,6 +2451,8 @@ window.addEventListener('popstate',function(e){
 #hpv .txscr input,#hpv .txscr textarea{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit}
 #txch button{flex:0 0 auto;white-space:nowrap}
 .modal.full.hp #hedit>*{flex-shrink:0}
+
+.pgal video{width:100%;height:100%;object-fit:contain!important;background:#000;display:block}.pgal>div{align-items:center}.pdb{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
 </style>
 </body>
 </html>
