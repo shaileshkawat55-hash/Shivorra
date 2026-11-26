@@ -2659,6 +2659,90 @@ admMgr=function(){if(MGRS===null)return '<p>Loading…</p>';var MX=siteGet().max
 .cbtn{width:36px;height:36px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);padding:0;min-height:0}
 .cbtn[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
 .modal .cols input[type=color]{width:44px;height:44px;flex:none;padding:3px;border-radius:50%}
+
+/* ===== v20: desktop layout (wide screens / "Desktop site" in phone browsers) ===== */
+@media(min-width:900px){
+ .bar{flex-wrap:nowrap;gap:16px}
+ .logo{flex:none}
+ .search{flex:1 1 auto!important;min-width:180px;max-width:660px;margin:0 auto;order:2}
+ .tools{flex:none;margin-left:0;order:3;gap:2px}
+ .tbtn{padding:8px 10px;white-space:nowrap}
+ .perks{display:grid!important;grid-template-columns:repeat(4,1fr);overflow:visible;gap:12px}
+ .perk{flex:1 1 auto;justify-content:center;border-radius:14px!important;padding:12px 14px}
+ .mban{min-height:230px;padding:36px 44px}
+ #grid{gap:20px}
+ #grid.gc-1{grid-template-columns:repeat(3,1fr)}
+ #grid.gc-2{grid-template-columns:repeat(4,1fr);gap:20px}
+ #grid.gc-3{grid-template-columns:repeat(5,1fr);gap:16px}
+ .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.14)}
+ .card .info h3{font-size:1rem}
+}
+@media(min-width:1200px){#grid.gc-2{grid-template-columns:repeat(5,1fr)}#grid.gc-3{grid-template-columns:repeat(6,1fr)}}
+
+@media(min-width:900px){
+ .atiles{grid-template-columns:repeat(3,1fr)}
+ .rvw{max-width:1100px;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box}
+}
 </style>
+<style id="v21css">
+/* ===== v21: bigger full-width scrolling category circles ===== */
+main .cats{margin:14px -16px 0}
+main .cats .wrap{padding:8px 16px 12px;gap:14px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none}
+main .cats .wrap::-webkit-scrollbar{display:none}
+main .cats .wrap::after{content:"";flex:0 0 4px}
+#cats .chip{scroll-snap-align:start;flex:none}
+#cats .chip.wc{gap:8px;min-width:76px;padding:4px 2px!important}
+#cats .chip.wc .cc{width:calc(var(--cs,48px)*1.5)!important;height:calc(var(--cs,48px)*1.5)!important;font-size:calc(var(--cs,48px)*.8)!important;box-shadow:0 6px 16px rgba(0,0,0,.10);background:linear-gradient(145deg,var(--surface),var(--bg))}
+#cats .chip.wc>span:last-child{font-size:.92rem;font-weight:700}
+#cats .chip.wc[aria-pressed="true"]>span:last-child{font-weight:800}
+#cats .chip.wc[aria-pressed="true"] .cc{box-shadow:0 0 0 4px rgba(212,175,90,.28),0 8px 20px rgba(199,154,46,.35)!important}
+
+/* ===== v21: manager / owner glory card ===== */
+.mgc{display:flex;align-items:center;gap:14px;padding:18px 16px;margin:18px 0 8px;border-radius:22px;position:relative;overflow:hidden;border:1.5px solid;isolation:isolate}
+.mgc::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:tshine 3.5s infinite;pointer-events:none}
+.mge{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;flex:none;border:2px solid;animation:mgfloat 3s ease-in-out infinite}
+.mge i{font-style:normal;font-size:2.1rem;line-height:1}
+.mgt{min-width:0}
+.mgt small{display:block;text-transform:uppercase;letter-spacing:.16em;font-size:.62rem;font-weight:800;opacity:.75}
+.mgt b{display:block;font-size:1.32rem;font-weight:800;margin:2px 0 4px;line-height:1.15}
+.mgt span{display:block;font-size:.86rem;line-height:1.38;opacity:.92}
+.mg-head,.mg-owner{background:radial-gradient(circle at 92% 0%,rgba(255,215,120,.45),transparent 55%),linear-gradient(135deg,#17120a,#33250a 55%,#5a3f0c);color:#ffeaa8;border-color:#e0b84e;box-shadow:0 8px 28px rgba(212,175,55,.42)}
+.mg-head .mge,.mg-owner .mge{background:radial-gradient(circle at 35% 30%,#fff6cc,#e0b84e 70%);border-color:#fff0b8;box-shadow:0 0 22px rgba(255,220,120,.7)}
+.mg-head::before,.mg-owner::before{content:"✦  ✦";position:absolute;right:14px;top:8px;font-size:.8rem;letter-spacing:8px;color:#ffe08a;opacity:.8;animation:mgtw 2.4s ease-in-out infinite;z-index:1}
+.mg-senior,.mg-gold{background:linear-gradient(135deg,#fbefc0,#f0d27a 55%,#fff3cf);color:#5B4300;border-color:#D4AF5A;box-shadow:0 6px 22px rgba(212,175,55,.38)}
+.mg-senior .mge,.mg-gold .mge{background:#fff8dc;border-color:#D4AF5A}
+.mg-diamond{background:linear-gradient(135deg,#d9f1ff,#b8e2ff 55%,#e9f7ff);color:#0B4A74;border-color:#7CC4F2;box-shadow:0 6px 22px rgba(80,170,240,.38)}
+.mg-diamond .mge{background:#f2faff;border-color:#7CC4F2}
+.mg-light{background:linear-gradient(135deg,#e8f0ff,#cfe0ff);color:#1D3F8C;border-color:#9db8f0;box-shadow:0 6px 20px rgba(90,130,230,.28)}
+.mg-light .mge{background:#f5f8ff;border-color:#9db8f0}
+.mg-std{background:radial-gradient(circle at 92% 0%,rgba(120,170,255,.28),transparent 55%),linear-gradient(135deg,#141b27,#26344c);color:#dfe8f5;border-color:#4c628a;box-shadow:0 6px 22px rgba(30,50,90,.35)}
+.mg-std .mge{background:#1d2a40;border-color:#6f86b0}
+@keyframes mgfloat{50%{transform:translateY(-3px) scale(1.04)}}
+@keyframes mgtw{50%{opacity:.25}}
+@media(prefers-reduced-motion:reduce){.mge,.mgc::before,.mgc::after{animation:none}}
+</style>
+<script>
+/* ===== v21: manager / owner glory card in the account menu ===== */
+(function(){
+var MGS={head:'You lead the Shivorra team. Thank you for running the show!',senior:'A senior pillar of our team. Thank you for your guidance!',diamond:'Our most valued team member. Thank you for being with Shivorra!',gold:'A valued member of our team. Thank you for your effort!',light:'Thank you for helping Shivorra grow!',std:'Thank you for keeping Shivorra running smoothly!',owner:'You built Shivorra. Full control of the store is in your hands.'};
+function mgCard(){
+ var k,e,t;
+ if(typeof ADM!=='undefined'&&ADM){k='owner';e='👑';t='Store Owner'}
+ else{var b=mgBadge(USER.id),l=String(b.t).toLowerCase();k=/head/.test(l)?'head':/senior/.test(l)?'senior':/diamond/.test(l)?'diamond':/gold/.test(l)?'gold':/light/.test(l)?'light':'std';e=b.e;t=b.t}
+ return '<div class="mgc mg-'+k+'"><span class="mge"><i>'+esc(e)+'</i></span><div class="mgt"><small>Shivorra team</small><b>'+esc(t)+'</b><span>'+MGS[k]+'</span></div></div>';
+}
+var _m21=menu;
+menu=function(){
+ _m21();
+ try{
+  if(!isAdm())return;
+  var h=[].filter.call(document.querySelectorAll('h3.mh3'),function(x){return x.querySelector('.tier')||/Store owner/i.test(x.textContent)})[0];
+  if(h){var d=document.createElement('div');d.innerHTML=mgCard();h.parentNode.replaceChild(d.firstChild,h)}
+ }catch(e){}
+};
+var a=$('menuBtn'),b=$('ba');if(a)a.onclick=menu;if(b)b.onclick=menu;
+})();
+</script>
+
 </body>
 </html>
