@@ -582,6 +582,25 @@ main .cats .wrap{max-width:none;margin:0;padding:6px 2px 8px}
 .rvi p{margin:0;white-space:pre-wrap;word-break:break-word}
 .rvi small,.rvwho{color:var(--muted)}
 .rvmore{align-self:center}
+
+/* ===== v18: Texts panel — clear sections (accordion), compact rows, sticky save ===== */
+.txsum{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.txsum b{color:var(--ink)}
+.txsec{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.txsec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 14px;font-weight:700}
+.txsec>summary::-webkit-details-marker{display:none}
+.txsec>summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .15s}
+.txsec[open]>summary::after{transform:rotate(180deg)}
+.txsec>summary .n{background:var(--bg);border:1px solid var(--line);border-radius:99px;font-size:.75rem;padding:1px 9px;color:var(--muted);font-weight:700}
+.txsec>summary .ch{background:var(--accent);color:var(--accent-ink);border-radius:99px;font-size:.72rem;padding:1px 8px;font-weight:800}
+.txsec .txbody{display:flex;flex-direction:column;gap:8px;padding:4px 12px 12px;border-top:1px solid var(--line)}
+.txr{padding:10px 12px}
+.txr .cv{font-size:.74rem;font-weight:600;line-height:1.3}
+.txr .txrow{display:flex;gap:6px;align-items:flex-start}
+.txr .txrow .txi{flex:1;min-width:0}
+.txr .txrs{flex:none;width:38px;height:42px;border-radius:10px;border:1px solid var(--line);color:var(--muted);font-size:1rem}
+.txr.chg{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.txsave{position:sticky;bottom:0;z-index:5;background:linear-gradient(to top,var(--surface) 75%,transparent);padding:8px 0 2px}.txsave .cta{padding:11px 16px}
 </style>
 <style>
 #cats .chip.wc{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:4px 6px!important;min-width:64px;color:var(--muted)}
@@ -779,7 +798,7 @@ function shvAdmin(c){function call(action,p){return c.functions.invoke('swift-en
   if(r.error){var m='Request failed';try{var j=await r.error.context.json();m=j.error||m}catch(e){m=r.error.message||m}return{data:null,error:{message:m}}}
   if(r.data&&r.data.error)return{data:null,error:{message:r.data.error}};return{data:(r.data&&r.data.user)?r.data.user:r.data,error:null}})}
  c.admin={createUser:function(o){return call('createUser',{email:o.email,password:o.password,meta:o.meta||{}})},updateUser:function(id,o){return call('updateUser',{id:id,password:o.password})},deleteUser:function(id){return call('deleteUser',{id:id})}}}
-var C=['All','Men','Women','Ethnic','Footwear','Watches','Accessories'];
+var C=['All','Men','Women','Ethnic','Footwear','Watches','Jewellery','Accessories'];
 var STS=['Pending approval','Approved','Shipped','Delivered','Rejected','Cancelled'];
 var ACTS=[['✅ Approve payment','Approved'],['❌ Reject payment','Rejected'],['🚚 Mark shipped','Shipped'],['🎉 Mark delivered','Delivered'],['Cancel order','Cancelled']];
 var P=[],LOADED=false,sb=null,USER=null,PROF=null,ADM=false,AVURL='',SET={upi:'sailesh9@fam',wa:'',qr:'',logo:'Shivorra'},ORD=[],CUST=null,tab='Orders',ofilt='All',OQ='',VIEW='',PEND=null,PF={id:null,keep:[],add:[],vs:[]},WELCOMED='',NEWACC=false;
@@ -1349,7 +1368,7 @@ async function saveSocial(){edSync();var out=[],bad=false;ED.s.forEach(function(
 async function saveMax(){var v=parseInt(($('mmx')||{}).value);if(!(v>=1&&v<=50))return toast('Enter a number from 1 to 50.');try{await siteSave({maxMgr:v});toast('Limit saved: '+v+' managers');adm('Managers')}catch(e){toast('Could not save. Please try again.')}}
 
 /* ---------- Homepage: banner text, product rows, category circles ---------- */
-var DEM={All:'🛍️',Men:'👔',Women:'👗',Ethnic:'🥻',Footwear:'👟',Watches:'⌚',Accessories:'👜'},CSZ={S:36,M:48,L:64};
+var DEM={All:'🛍️',Men:'👔',Women:'👗',Ethnic:'🥻',Footwear:'👟',Watches:'⌚',Jewellery:'💎',Accessories:'👜'},CSZ={S:36,M:48,L:64};
 var DROWS=[{h:'🔥 Hot deals',s:'disc',n:8},{h:'⭐ Top rated',s:'rate',n:8}],DHERO={a:'Dress with',b:'purpose.',t:'Premium fashion at fair prices'};
 function catCfg(){return siteGet().cat}
 function catIco(c,g){g=g||catCfg();var im=g.img[c]&&surl('product-images',g.img[c]);return im?'<img src="'+esc(im)+'" alt="">':esc(g.em[c]||DEM[c]||'🏷️')}
@@ -1410,7 +1429,7 @@ function mc(p){return '<div class="mini" data-id="'+p.id+'"><div class="mp" styl
 function showFeat(){strips();var f=sugg();$('feat').style.display=(f.length&&S.cat==='All'&&!S.q&&!S.wishOnly)?'':'none';$('fg').innerHTML=f.map(mc).join('')}
 
 function goHome(){X();open(false);S.cat='All';S.wishOnly=false;S.q='';$('q').value='';cats();grid();window.scrollTo({top:0,behavior:'smooth'})}
-function catM(){var E={All:'🛍️',Men:'👔',Women:'👗',Ethnic:'🥻',Footwear:'👟',Watches:'⌚',Accessories:'👜'};M('<h2>Categories</h2><div class="tiles cg">'+C.map(function(c){return '<button class="tile" onclick="pickCat(\''+c+'\')"><span style="font-size:2rem;display:block">'+catIco(c)+'</span>'+c+'</button>'}).join('')+'</div><button class="link" onclick="X()">Close</button>',0,'cats')}
+function catM(){var E={All:'🛍️',Men:'👔',Women:'👗',Ethnic:'🥻',Footwear:'👟',Watches:'⌚',Jewellery:'💎',Accessories:'👜'};M('<h2>Categories</h2><div class="tiles cg">'+C.map(function(c){return '<button class="tile" onclick="pickCat(\''+c+'\')"><span style="font-size:2rem;display:block">'+catIco(c)+'</span>'+c+'</button>'}).join('')+'</div><button class="link" onclick="X()">Close</button>',0,'cats')}
 function pickCat(c){X();S.cat=c;S.wishOnly=false;cats();grid();$('shop').scrollIntoView({behavior:'smooth'})}
 function navSync(){var k=S.wishOnly?'bw':S.cat!=='All'?'bc':'bh';['bh','bc','bw'].forEach(function(i){$(i).classList.toggle('on',i===k)})}
 $('bc').onclick=catM;$('bw').onclick=gotoWish;$('ba').onclick=menu;$('bk').onclick=function(){open(true)};
@@ -1497,7 +1516,7 @@ var IDBP=new Promise(function(res){try{var q=indexedDB.open('shv_files',1);q.onu
 function idbDo(f){IDBP.then(function(d){if(d)try{f(d.transaction('f','readwrite').objectStore('f'))}catch(x){}})}
 try{DB=JSON.parse(localStorage.getItem(K))}catch(e){}
 function id(){return 'd'+Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
-function seed(){var pr=[['Classic White Shirt','👔','Men',799,1499,'#E9E4D6'],['Slim Fit Jeans','👖','Men',999,1999,'#DDE3EA'],['Silk Saree','🥻','Women',2499,4999,'#F1DDE0'],['Floral Kurti','👗','Women',699,1299,'#EADCF0'],['Sherwani Set','🧥','Ethnic',3999,7999,'#E8DFC9'],['Leather Sneakers','👟','Footwear',1499,2999,'#E4E4E4'],['Analog Watch','⌚','Watches',1999,3999,'#D9D6CE'],['Gold Bracelet','📿','Accessories',499,999,'#F3E7C3']];
+function seed(){var pr=[['Classic White Shirt','👔','Men',799,1499,'#E9E4D6'],['Slim Fit Jeans','👖','Men',999,1999,'#DDE3EA'],['Silk Saree','🥻','Women',2499,4999,'#F1DDE0'],['Floral Kurti','👗','Women',699,1299,'#EADCF0'],['Sherwani Set','🧥','Ethnic',3999,7999,'#E8DFC9'],['Leather Sneakers','👟','Footwear',1499,2999,'#E4E4E4'],['Analog Watch','⌚','Watches',1999,3999,'#D9D6CE'],['Gold Bracelet','📿','Accessories',499,999,'#F3E7C3'],['Diamond Ring','💍','Jewellery',14999,24999,'#EDE6F5'],['Gold Chain','📿','Jewellery',8999,12999,'#F3E7C3']];
  return{users:[],
  profiles:[],
  user_roles:[],store_settings:[{id:1,upi_id:'demo@upi',whatsapp:'',qr_path:'',logo_text:'Shivorra'}],
@@ -1654,7 +1673,7 @@ async function secSave(){var o=($('sot').value||'').trim(),p=$('snp').value,p2=$
  SEC={step:0,ch:'',sent:'',demo:'',pend:{at:r.data.activates_at}};toast('Password change scheduled');adm('Security')}
 async function secCancel(){if(!await ask('Cancel the scheduled password change?'))return;await sb.rpc('password_cancel');SEC.pend=null;toast('Scheduled change cancelled');adm('Security')}
 /* ---------- Managers (owner only, max 3) ---------- */
-var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Reviews:'Reviews (see, edit or delete customer reviews)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name'},ALLP=['Products','Reviews','Chats','Orders','Customers','Homepage','Payments','Policies','FAQs','Social','Logo'];
+var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Reviews:'Reviews (see, edit or delete customer reviews)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name',Texts:'All texts (change any text on the website)'},ALLP=['Orders','Chats','Customers','Products','Reviews','Homepage','Texts','Payments','Policies','FAQs','Social','Logo'];
 function can(k){return !!USER&&(ADM||MGR.indexOf(k)>=0)}
 async function loadMgrs(){var a=await Promise.all([sb.from('user_roles').select('*'),sb.from('profiles').select('*')]),pm={};(a[1].data||[]).forEach(function(x){pm[x.id]=x});
  MGRS=(a[0].data||[]).filter(function(r){return r.role==='manager'&&pm[r.user_id]}).map(function(r){var x=pm[r.user_id];return{id:r.user_id,perms:r.perms||[],login:x.mobile||x.email||''}})}
@@ -1742,7 +1761,7 @@ async function secSave(){var o=($('sot').value||'').trim(),p=$('snp').value,p2=$
  SEC={step:0,ch:'',sent:'',demo:'',pend:{at:r.data.activates_at}};toast('Password change scheduled');adm('Security')}
 async function secCancel(){if(!await ask('Cancel the scheduled password change?'))return;await sb.rpc('password_cancel');SEC.pend=null;toast('Scheduled change cancelled');adm('Security')}
 /* ---------- Managers (owner only, max 3) ---------- */
-var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Reviews:'Reviews (see, edit or delete customer reviews)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name'},ALLP=['Products','Reviews','Chats','Orders','Customers','Homepage','Payments','Policies','FAQs','Social','Logo'];
+var MGR=[],MGRS=null,MPN={Products:'Products (add, edit, delete)',Reviews:'Reviews (see, edit or delete customer reviews)',Chats:'Customer chats',Orders:'Orders (approve, ship, deliver)',Customers:'Customers list',Homepage:'Homepage (banner text, rows, category circles)',Payments:'Payment settings (UPI, QR, WhatsApp number, backup)',Policies:'Terms and policies',FAQs:'Quick answers (FAQs)',Social:'Social media links',Logo:'Logo & name',Texts:'All texts (change any text on the website)'},ALLP=['Orders','Chats','Customers','Products','Reviews','Homepage','Texts','Payments','Policies','FAQs','Social','Logo'];
 function can(k){return !!USER&&(ADM||MGR.indexOf(k)>=0)}
 async function loadMgrs(){var a=await Promise.all([sb.from('user_roles').select('*'),sb.from('profiles').select('*')]),pm={};(a[1].data||[]).forEach(function(x){pm[x.id]=x});
  MGRS=(a[0].data||[]).filter(function(r){return r.role==='manager'&&pm[r.user_id]}).map(function(r){var x=pm[r.user_id];return{id:r.user_id,perms:r.perms||[],login:x.mobile||x.email||''}})}
@@ -2535,6 +2554,35 @@ async function mgrPhoto(id,inp){var f=inp.files&&inp.files[0];inp.value='';if(!f
 var _roleTag16=roleTag;roleTag=function(id){if(ROLEMAP[id]==='manager'){var b=mgBadge(id);return ' <span class="tier">'+esc(b.e)+' '+esc(b.t)+'</span>'}return _roleTag16(id)};
 
 (async function(){try{await boot();window.__ok=1;ownerCheck();txInit()}catch(e){window.__showErr(e)}})();
+
+/* ===== v18: Texts panel — sections instead of one very long list ===== */
+var TXOPEN={};
+function txIsChanged(o,M){var e=TXQ.ed[o];if(e!==undefined)return String(e).trim()!==''&&String(e).trim()!==o;return M[o]!==undefined&&M[o]!==o}
+function txChangedCount(){var M=txMap(),n=0;txAll().forEach(function(t){if(txIsChanged(t,M))n++});return n}
+txRows=function(list,M){return list.map(function(o){var cur=TXQ.ed[o]!==undefined?TXQ.ed[o]:(M[o]!==undefined?M[o]:o),long=o.length>60||String(cur).length>60,chg=txIsChanged(o,M),
+  at='class="txi" data-o="'+esc(o)+'" oninput="txType(this)" maxlength="500"';
+  return '<div class="oc txr'+(chg?' chg':'')+'"><small class="cv">'+(chg?'✎ ':'')+esc(o)+'</small><div class="txrow">'+(long?'<textarea rows="3" '+at+'>'+esc(cur)+'</textarea>':'<input '+at+' value="'+esc(cur)+'">')+(chg?'<button type="button" class="txrs" data-o="'+esc(o)+'" onclick="txRowReset(this)" aria-label="Put back the original" title="Put back the original">↺</button>':'')+'</div></div>'}).join('')||'<p>No texts found here. Try another search or section.</p>'};
+function txType(el){var o=el.getAttribute('data-o');TXQ.ed[o]=el.value;var r=el.closest('.txr');if(r){var M=txMap(),c=txIsChanged(o,M);r.classList.toggle('chg',c)}txCount();txPrev()}
+function txRowReset(b){var o=b.getAttribute('data-o');TXQ.ed[o]=o;var M=Object.assign({},txMap());delete M[o];/* saved value is removed on Save; show original now */txList()}
+function txCount(){var el=$('txsv');if(!el)return;var n=txChangedCount();el.textContent=n?'Save texts ('+n+' changed)':'Save texts';var s=$('txsm');if(s)s.innerHTML='<b>'+txAll().length+'</b> texts · <b>'+n+'</b> changed'}
+txGroups=function(list,M){var by={},q=(TXQ.q||'').trim();list.forEach(function(t){var c=TXCAT[t]||'Other';(by[c]=by[c]||[]).push(t)});
+  var order=TXORD.filter(function(c){return by[c]});if(!order.length)return '<p>No texts found. Try another search.</p>';
+  return order.map(function(c){var ch=by[c].filter(function(t){return txIsChanged(t,M)}).length,open=q||TXOPEN[c];
+   return '<details class="txsec" data-c="'+esc(c)+'"'+(open?' open':'')+' ontoggle="TXOPEN[this.getAttribute(\'data-c\')]=this.open"><summary>'+esc(c)+' <span class="n">'+by[c].length+'</span>'+(ch?'<span class="ch">✎ '+ch+'</span>':'')+'</summary><div class="txbody">'+txRows(by[c],M)+'</div></details>'}).join('')};
+txList=function(){var el=$('txl');if(el){var l=txVisible();el.innerHTML=TXQ.cat==='All'?txGroups(l,txMap()):txRows(l,txMap())}txCount();txPrev()};
+txVisible=function(){var M=txMap(),q=(TXQ.q||'').toLowerCase();return txAll().filter(function(t){var inCat=TXQ.cat==='All'||(TXQ.cat==='Changed'?txIsChanged(t,M):(TXCAT[t]||'Other')===TXQ.cat);return inCat&&(!q||t.toLowerCase().indexOf(q)>=0||String(M[t]||'').toLowerCase().indexOf(q)>=0||String(TXQ.ed[t]||'').toLowerCase().indexOf(q)>=0)}).slice(0,400)};
+txChips=function(){var cnt={},all=txAll(),M=txMap(),chg=0;all.forEach(function(t){var c=TXCAT[t]||'Other';cnt[c]=(cnt[c]||0)+1;if(txIsChanged(t,M))chg++});
+  var b=function(c,l){return '<button type="button" data-c="'+esc(c)+'" aria-pressed="'+(TXQ.cat===c)+'" onclick="txCat(this.getAttribute(\'data-c\'))">'+esc(l)+'</button>'};
+  return b('All','All ('+all.length+')')+(chg?b('Changed','✎ Changed ('+chg+')'):'')+TXORD.filter(function(c){return cnt[c]}).map(function(c){return b(c,c+' ('+cnt[c]+')')}).join('')};
+admTx=function(){if(!TXQ.rows)TXQ.rows=txScan();hInit();setTimeout(function(){if($('hpf'))txFrameInit();else txPrev();txCount()},0);var l=txVisible();
+ return '<div class="hpvw"><div class="hpvh"><small>Preview</small><input id="pvr" type="range" min="15" max="60" step="5" value="'+lsj('shv_pvh',30)+'" oninput="pvSize(this.value)" aria-label="Preview size" style="flex:1;min-width:60px">'+(txFrameOn()?'<button class="rf" onclick="pvReload(this)" aria-label="Reload preview"><i class="rfi">↻</i></button>':'')+'<button id="hpfull" onclick="hpFull()">⛶ Full</button></div><div id="hpv"'+(txFrameOn()?' class="pvf"':'')+'>'+txPrevHtml()+'</div></div>'+
+ '<div id="hedit"><small>Tap any text in the preview to jump to it. Open a section, type the new words, then tap Save texts.</small>'+
+ '<div class="tabs" id="txch" style="flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px">'+txChips()+'</div>'+
+ '<input id="txq" placeholder="Search texts" value="'+esc(TXQ.q)+'" oninput="TXQ.q=this.value;txList()">'+
+ '<div class="txsum"><span id="txsm"></span><button class="tbtn mh" style="margin-left:auto" onclick="TXQ.rows=null;adm(\'Texts\')">↻ Scan again</button></div>'+
+ '<details class="oc"><summary><b>+ Add a text manually</b></summary><label>Original text (exactly as shown)<input id="txo" maxlength="160"></label><label>New text<input id="txn" maxlength="500"></label><button class="cta" onclick="txAddGo()">Add to list</button></details>'+
+ '<div id="txl" style="display:flex;flex-direction:column;gap:10px">'+(TXQ.cat==='All'?txGroups(l,txMap()):txRows(l,txMap()))+'</div><div class="err" id="er"></div>'+
+ '<div class="txsave"><button class="cta" id="txsv" onclick="txSave()">Save texts</button></div><button class="link" style="color:#C62828" onclick="txResetAll()">Reset all texts to original</button></div>'};
 </script>
 <style>
 #hpv .txscr{display:flex;flex-direction:column;gap:12px;padding:14px;background:var(--surface)}
