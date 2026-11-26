@@ -907,7 +907,7 @@ function av(u,s){return u.pic?'<img class="av" style="width:'+s+'px;height:'+s+'
 function ui(){var u=me();$('loginBtn').innerHTML=u?av(u,28)+' '+esc(u.f):'👤 Login';$('admBtn').style.display=isAdm()?'':'none';var n=isAdm()?unread():0;$('admBtn').innerHTML='⚙️ Admin'+(n?'<span class="badge">'+n+'</span>':'');showFeat()}
 async function loadAvatar(){AVURL='';if(PROF&&PROF.avatar_path){await signAll('avatars',[PROF.avatar_path]);AVURL=surl('avatars',PROF.avatar_path)}}
 async function loadMe(){var md=USER.user_metadata||{};
- var a=await Promise.all([sb.from('profiles').select('*').eq('id',USER.id).maybeSingle(),sb.from('user_roles').select('role').eq('user_id',USER.id)]);
+ var a=await Promise.all([sb.from('profiles').select('*').eq('id',USER.id).maybeSingle(),sb.from('user_roles').select('*').eq('user_id',USER.id)]);
  PROF=a[0].data||{id:USER.id,first_name:md.first_name||'',last_name:md.last_name||'',email:USER.email,mobile:md.mobile||'',addresses:[]};
  ADM=(a[1].data||[]).some(function(r){return r.role==='admin'});MGR=[];(a[1].data||[]).forEach(function(r){if(r.role==='manager')MGR=(r.perms||[]).slice()});
  await loadAvatar();await loadOrders(true);if(can('Chats'))loadChats().then(ui)}
@@ -1028,7 +1028,7 @@ var AMETA={Orders:['📦','Orders','Approve, ship, deliver'],Chats:['💬','Chat
 var BACKSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 function adm(t){if(!isAdm())return;if(t==='_menu')tab='';else tab=t||tab;var TABS=ADM?['Orders','Chats','Customers','Products','Reviews','Homepage','Texts','Payments','Policies','FAQs','Social','Logo','Managers','Security']:['Orders','Chats','Customers','Products','Reviews','Homepage','Texts','Payments','Policies','FAQs','Social','Logo'].filter(can);if(tab&&TABS.indexOf(tab)<0)tab='';if(tab!=='Chats')CHO=null;if(adm.lt!==tab){ED={};adm.lt=tab}if(tab!=='Security')SEC={step:0,ch:'',sent:'',demo:'',pend:undefined};
  var n=unread(),h;
- if(!tab){h='<div class="ahd"><button class="aback" onclick="X()" aria-label="Close">'+BACKSVG+'</button><div class="att"><h2>'+(ADM?'Admin panel':'Manager panel')+'</h2><small>'+(ADM?'Store owner':'Manager')+' · choose a section</small></div><button class="alo" onclick="logout()">Log out</button></div><div class="atiles">'+TABS.map(function(k){var m=AMETA[k];return '<button class="atile" onclick="adm(\''+k+'\')"><i>'+m[0]+'</i><b>'+m[1]+'</b><small>'+m[2]+'</small>'+(k==='Chats'&&n?'<span class="badge">'+n+'</span>':'')+'</button>'}).join('')+'</div>';
+ if(!tab){h='<div class="ahd"><button class="aback" onclick="X()" aria-label="Close">'+BACKSVG+'</button><div class="att"><h2>'+(ADM?'Admin panel':'Manager panel')+'</h2><small>'+(ADM?'Store owner':'Manager')+' · '+TABS.length+' section'+(TABS.length===1?'':'s')+'</small></div>'+(ADM?'':'<button class="alo" aria-label="Refresh" onclick="refreshRoles().then(function(){adm(\'_menu\')})">↻</button>')+'<button class="alo" onclick="logout()">Log out</button></div><div class="atiles">'+TABS.map(function(k){var m=AMETA[k];return '<button class="atile" onclick="adm(\''+k+'\')"><i>'+m[0]+'</i><b>'+m[1]+'</b><small>'+m[2]+'</small>'+(k==='Chats'&&n?'<span class="badge">'+n+'</span>':'')+'</button>'}).join('')+'</div>';
   M(h,1,'adm-menu');return}
  h='<div class="ahd"><button class="aback" onclick="admBack()" aria-label="Back">'+BACKSVG+'</button><div class="att"><h2>'+AMETA[tab][0]+' '+AMETA[tab][1]+'</h2><small>'+(ADM?'Admin panel':'Manager panel')+'</small></div></div>';
  if(tab==='Orders')h+=admOrders();else if(tab==='Chats')h+=admChats();else if(tab==='Customers')h+=admCust();else if(tab==='Products')h+=admProd();else if(tab==='Reviews')h+=admRev();else if(tab==='Homepage')h+=admHome();else if(tab==='Texts')h+=admTx();else if(tab==='Policies')h+=admList('terms');else if(tab==='FAQs')h+=admList('faqs');else if(tab==='Social')h+=admSocial();else if(tab==='Logo')h+=admLogo();else if(tab==='Managers')h+=admMgr();else if(tab==='Security')h+=admSec();else h+=admPay();
@@ -1083,7 +1083,7 @@ function admProd(){var p=PF.id?pb(PF.id):null,v=function(k,d){return p?esc(p[k])
  prodList()}
 function resetPF(){PF.add.forEach(function(a){URL.revokeObjectURL(a.u)});PF={id:null,keep:[],add:[],vs:[]}}
 function editP(id){var p=pb(id);if(!p)return;resetPF();PF.id=id;PF.keep=p.paths.slice();PF.vs=p.vs.map(function(v){return{n:v.n,h:v.h||'#000000',p:v.p,m:v.m}});adm('Products');$('modal').scrollTop=0}
-function drawPrev(){var el=$('pprev');if(!el)return;var h=PF.keep.map(function(x,i){return '<span>'+mth(surl('product-images',x))+'<button onclick="PF.keep.splice('+i+',1);drawPrev()" aria-label="Remove photo">✕</button></span>'}).join('')+PF.add.map(function(a,i){return '<span>'+(a.v?'<video src="'+a.u+'#t=0.1" muted playsinline preload="metadata"></video><i class="vpl">▶</i>':'<img src="'+a.u+'" alt="">')+'<button onclick="URL.revokeObjectURL(PF.add['+i+'].u);PF.add.splice('+i+',1);drawPrev()" aria-label="Remove photo">✕</button></span>'}).join('');el.innerHTML=h||'<small style="color:var(--muted)">No photos yet.</small>';var n=$('pfn');if(n)n.textContent=(PF.keep.length+PF.add.length)+' of 20 photos/videos'}
+function drawPrev(){var el=$('pprev');if(!el)return;var h=PF.keep.map(function(x,i){return '<span>'+mth(surl('product-images',x))+'<button onclick="PF.keep.splice('+i+',1);drawPrev()" aria-label="Remove photo">✕</button></span>'}).join('')+PF.add.map(function(a,i){return '<span>'+(a.v?'<video src="'+a.u+'#t=0.1" muted playsinline preload="metadata"></video><i class="vpl">▶</i>':'<img src="'+a.u+'" alt="">')+'<button onclick="pfRmAdd('+i+')" aria-label="Remove photo">✕</button></span>'}).join('');el.innerHTML=h||'<small style="color:var(--muted)">No photos yet.</small>';var n=$('pfn');if(n)n.textContent=(PF.keep.length+PF.add.length)+' of 20 photos/videos'}
 var VCOL=[['Black','#111111'],['White','#F5F5F5'],['Red','#D62828'],['Blue','#1D4ED8'],['Navy','#1E2A44'],['Green','#2F5D3A'],['Olive','#5B5A36'],['Maroon','#6D1A2A'],['Beige','#D8C3A5'],['Grey','#7A7A7A'],['Pink','#F4A6B8'],['Yellow','#F2C94C'],['Brown','#7B4B2A'],['Purple','#5B2A6E']];
 function drawVars(){var el=$('vlist');if(!el)return;el.innerHTML=PF.vs.map(function(v,i){return '<div class="vrow"><input type="color" value="'+esc(v.h||'#000000')+'" oninput="PF.vs['+i+'].h=this.value" aria-label="Colour shade"><input type="text" maxlength="40" placeholder="Colour name, e.g. Deep Plum" value="'+esc(v.n)+'" list="vcl" oninput="vName('+i+',this.value)" aria-label="Colour name"><button type="button" onclick="PF.vs.splice('+i+',1);drawVars()" aria-label="Remove colour">✕</button><div class="vp"><input type="number" inputmode="numeric" min="1" placeholder="Price ₹" value="'+esc(v.p)+'" oninput="PF.vs['+i+'].p=this.value" aria-label="Price"><input type="number" inputmode="numeric" min="1" placeholder="MRP ₹" value="'+esc(v.m)+'" oninput="PF.vs['+i+'].m=this.value" aria-label="MRP"></div></div>'}).join('')+'<datalist id="vcl">'+VCOL.map(function(c){return '<option value="'+c[0]+'">'}).join('')+'</datalist>'}
 function vName(i,val){PF.vs[i].n=val;var c=VCOL.filter(function(x){return x[0].toLowerCase()===val.trim().toLowerCase()})[0];if(c){PF.vs[i].h=c[1];var r=$('vlist').children[i];if(r)r.querySelector('input[type=color]').value=c[1]}}
@@ -1103,7 +1103,7 @@ async function saveP(){var n=$('pn').value.trim(),pr=Math.round(+$('pp').value),
  try{var paths=PF.keep.slice();for(var i=0;i<PF.add.length;i++){paths.push(await upload('product-images','p/'+rid()+(PF.add[i].v?PF.add[i].x:'.jpg'),PF.add[i].b))}
   var row={name:n,emoji:e,category:c,price:pr,mrp:mr,featured:f,hot:hh,top:tt,description:ds,images:paths,variants:vs,sizes:sz,size_prices:szp},editing=PF.id,old=editing?((pb(editing)||{}).paths||[]):[];
   var r=editing?await sb.from('products').update(row).eq('id',editing).select().single():await sb.from('products').insert(row).select().single();
-  if(r.error)throw r.error;{var fv=(document.querySelector('input[name=pfit]:checked')||{}).value||'fit';if(!await pFitSave(r.data.id,fv))PFITERR=1}
+  if(r.error)throw r.error;{var fv=(document.querySelector('input[name=pfit]:checked')||{}).value||'fit';if(!await pFitSave(r.data.id,fv))PFITERR=1}try{await szcSave(r.data.id,PF.szc||'')}catch(e){}
   var gone=old.filter(function(x){return paths.indexOf(x)<0});if(gone.length)sb.storage.from('product-images').remove(gone);
   resetPF();await loadProducts();adm('Products');toast(editing?'Product updated':'Product added to '+c);if(PFITERR){PFITERR=0;setTimeout(function(){toast('Product saved, but the photo style could not be saved. Ask the owner to set it.')},2200)}}
  catch(x){busy('psave',0);var m=x.message||'';bad(/row-level|permission|0 rows|JSON object/i.test(m)?'Only the store admin can change products. Log in again.':/colour|size/i.test(m)?m:upErr(x))}}
@@ -1135,7 +1135,7 @@ function szDraw(){var b=$('szbox');if(!b)return;var a=szGet();
  var h='<div class="szq"><button type="button" onclick="szSet(\'S, M, L, XL\')">S to XL</button><button type="button" onclick="szSet(\'XS, S, M, L, XL, XXL\')">XS to XXL</button><button type="button" onclick="szSet(\'Free size\')">Free size</button><button type="button" class="szx" onclick="szSet(\'\')">Clear all</button></div>';
  SZG.forEach(function(g){h+='<div class="szg"><small>'+g[0]+'</small><div class="szr">'+g[1].map(function(z){var on=szIdx(a,z)>=0;return '<button type="button" class="szc'+(on?' on':'')+'" aria-pressed="'+on+'" onclick="szTog(\''+z+'\')">'+z+'</button>'}).join('')+'</div></div>'});
  h+='<div class="szg"><small>Other size</small><div class="szadd"><input id="szc" type="text" maxlength="12" placeholder="e.g. 4XL, 42, Kids 8" onkeydown="if(event.key===\'Enter\'){event.preventDefault();szAddC()}"><button type="button" class="szc" onclick="szAddC()">+ Add</button></div></div>';
- h+=a.length?'<div class="szg"><small>Selected ('+a.length+')</small><small class="szn">Only fill a price if that size costs different. Empty means the normal product price.</small>'+a.map(function(o,i){return '<div class="szs"><b>'+esc(o.z)+'</b><input type="text" inputmode="numeric" maxlength="6" placeholder="Price (₹), optional" value="'+esc(o.p)+'" oninput="szPr('+i+',this.value)" aria-label="Price for size '+esc(o.z)+'"><button type="button" onclick="szDel('+i+')" aria-label="Remove size">✕</button></div>'}).join('')+'</div>':'<small class="cv">No size selected. Customers will not see a size option for this product.</small>';
+ h+=a.length?'<div class="szg"><small>Selected ('+a.length+')</small><small class="szn">Only fill a price if that size costs different. Empty means the normal product price.</small>'+a.map(function(o,i){return '<div class="szrw"><b>'+esc(o.z)+'</b><input type="text" inputmode="numeric" maxlength="6" placeholder="Price (₹), optional" value="'+esc(o.p)+'" oninput="szPr('+i+',this.value)" aria-label="Price for size '+esc(o.z)+'"><button type="button" onclick="szDel('+i+')" aria-label="Remove size">✕</button></div>'}).join('')+'</div>':'<small class="cv">No size selected. Customers will not see a size option for this product.</small>';
  b.innerHTML=h}
 var PSEL={},PQ='',PFL='all',PACT={topOn:{top:true},topOff:{top:false},hotOn:{hot:true},hotOff:{hot:false},sugOn:{featured:true},sugOff:{featured:false}};
 function plCard(p){var sel=!!PSEL[p.id],x=[];if(p.vs.length)x.push(p.vs.length+' colour'+(p.vs.length>1?'s':''));
@@ -1438,7 +1438,7 @@ function pdDraw(top){var p=pb(PDID);if(!p)return closePdNow();var b=$('pdb'),g0=
  $('pdt').textContent=p.n;$('pcc').textContent=cartCount();
  var gal='<div class="pgw"><div class="pgal" id="pgal" data-fit="'+pFit(p.id)+'">'+(im.length?im.map(function(s,i){return '<div'+(isVid(s)?'':' style="--u:url(\''+esc(s)+'\')"')+'>'+(isVid(s)?'<video src="'+esc(s)+'" controls playsinline preload="metadata" style="width:100%;height:100%;object-fit:contain;background:#000"></video>':'<img src="'+esc(s)+'" alt="'+esc(p.n)+'"'+(i?' loading="lazy"':'')+'>')+'</div>'}).join(''):'<div style="background:'+esc(p.bg)+'"><span class="pemo">'+esc(p.e)+'</span></div>')+'</div>'+(im.length>1?'<span class="pcount" id="pcount">1 / '+im.length+'</span>':'')+'<button class="pwish" onclick="pdW('+p.id+')" aria-label="'+(w?'Remove from wishlist':'Save to wishlist')+'">'+(w?'❤️':'🤍')+'</button></div>'+(im.length>1?'<div class="pthumbs">'+im.map(function(s,i){return '<button onclick="pgo('+i+')" aria-label="Photo '+(i+1)+'">'+mth(s)+'</button>'}).join('')+'</div>':'');
  var info='<div class="pdr"><span class="pcat">'+esc(p.c)+'</span><h1 class="pdn">'+esc(p.n)+'</h1>'+(p.v?'<div class="rate"><b>'+p.r+' ★</b>('+p.v.toLocaleString('en-IN')+' ratings)</div>':'')+'<div class="pdpr"><b>'+money(pr)+'</b>'+(mr>pr?'<s>'+money(mr)+'</s><span>'+off+'% off</span>':'')+'</div><small class="ptax">Inclusive of all taxes · Free delivery above ₹999</small>'+
-  (p.sz.length?'<div class="popt"><b>Size: <span>'+(PDS?esc(PDS):'Select a size')+'</span></b><div class="szs">'+p.sz.map(function(s,i){return '<button aria-pressed="'+(s===PDS)+'" onclick="pdSz('+i+')">'+esc(s)+(p.sp&&p.sp[s]?'<small style="display:block;font-size:11px;opacity:.7">'+money(p.sp[s])+'</small>':'')+'</button>'}).join('')+'</div></div>':'')+
+  (p.sz.length?'<div class="popt"><b>Size: <span>'+(PDS?esc(PDS):'Select a size')+'</span></b><div class="szs"'+szcAttr(p.id)+'>'+p.sz.map(function(s,i){return '<button aria-pressed="'+(s===PDS)+'" onclick="pdSz('+i+')">'+esc(s)+(p.sp&&p.sp[s]?'<small style="display:block;font-size:11px;opacity:.7">'+money(p.sp[s])+'</small>':'')+'</button>'}).join('')+'</div></div>':'')+
   (p.vs.length?'<div class="popt"><b>Colour: <span>'+esc(PDV)+'</span></b><div class="sws">'+p.vs.map(function(v,i){return '<button aria-pressed="'+(v.n===PDV)+'" onclick="pdCol('+i+')" aria-label="'+esc(v.n)+'" title="'+esc(v.n)+(p.from?' · '+money(v.p):'')+'"><i style="background:'+esc(v.h||'#888')+'"></i></button>'}).join('')+'</div></div>':'')+
   '<div class="err" id="pder"></div><div class="pbtn"><button class="cta alt" onclick="pdAdd(0)">Add to cart</button><button class="cta" onclick="pdAdd(1)">Buy now</button></div>'+
   '<div class="pbox"><b>Product details</b><p>'+esc(p.desc||'Premium '+p.c.toLowerCase()+' made for everyday comfort and lasting style. Easy to pair and easy to love.')+'</p></div><ul class="pdl"><li>🚚 Free delivery above ₹999 (3 to 7 working days)</li><li>↩️ 7-day return on unused items with tags</li><li>🔒 Pay securely by UPI</li><li>💬 Questions? <button class="link" style="display:inline;padding:0" onclick="pdAsk()">Chat with us</button></li></ul></div>';
@@ -2493,6 +2493,47 @@ window.addEventListener('popstate',function(e){
 (function(){var w=function(n,f){var o=window[n];if(typeof o!=='function')return;window[n]=function(){var r=o.apply(this,arguments);nvSoon();return r}};
  ['M','X','open','chatX','chatM','closePdNow','pd','lbDraw','lbClose'].forEach(function(n){w(n)})})();
 
+
+/* ===== v16: photo remove fix, size text colour, manager checks and profile editing ===== */
+function pfRmAdd(i){var a=PF.add[i];if(a){try{window.URL.revokeObjectURL(a.u)}catch(e){}PF.add.splice(i,1)}drawPrev()}
+/* size text colour (per product, shown on the product page) */
+var SZCOL=[['','Default'],['#111111','Black'],['#B3261E','Red'],['#1D4ED8','Blue'],['#0B7A45','Green'],['#8A6416','Gold'],['#6D1A2A','Maroon'],['#5B2A6E','Purple']];
+function szColor(id){var c=((lsRaw().site||{}).szc||{})[id];return /^#[0-9a-f]{6}$/i.test(c||'')?c:''}
+function szcAttr(id){var c=szColor(id);return c?' style="--szc:'+c+'"':''}
+function szcHtml(){var cur=PF.szc||'';return '<div class="szg"><small>Size text colour</small><small class="szn">Colour of the size letters on the product page.</small><div class="cols">'+SZCOL.map(function(c){return '<button type="button" class="cbtn" aria-pressed="'+(cur===c[0])+'" aria-label="'+c[1]+'" onclick="szcPick(\''+c[0]+'\')" style="background:'+(c[0]||'linear-gradient(135deg,#fff 50%,#d8dce3 50%)')+'"></button>'}).join('')+'<input type="color" value="'+(cur||'#111111')+'" aria-label="Custom colour" oninput="szcPick(this.value,1)"></div><div class="szprev">Preview: <b style="'+(cur?'color:'+cur:'')+'">S &nbsp; M &nbsp; L &nbsp; XL</b></div></div>'}
+function szcPick(v,live){PF.szc=v;if(live){var p=document.querySelector('.szprev b');if(p)p.style.color=v;return}szDraw()}
+var _szDraw16=szDraw;szDraw=function(){_szDraw16();var b=$('szbox');if(b)b.insertAdjacentHTML('beforeend',szcHtml())};
+var _editP16=editP;editP=function(id){_editP16(id);PF.szc=szColor(id);szDraw()};
+async function szcSave(id,c){var m=Object.assign({},(lsRaw().site||{}).szc||{});if(c)m[id]=c;else delete m[id];await siteSave({szc:m})}
+/* managers: roles must really be saved (the old code showed a tick even when the database refused) */
+mgrToggle=async function(id,k,on){var m=MGRS.filter(function(x){return x.id===id})[0];if(!m)return;var np=m.perms.filter(function(x){return x!==k});if(on)np.push(k);var e=$('mc_'+id+'_'+k);
+ if(!np.length){if(e)e.checked=true;return toast('A manager needs at least one role. Use Remove manager instead.')}
+ var r=await sb.from('user_roles').update({perms:np}).eq('user_id',id).eq('role','manager').select(),sv=r.data&&r.data[0]&&r.data[0].perms;
+ if(r.error||!sv||(sv.indexOf(k)>=0)!==on){if(e)e.checked=!on;return toast(r.error?'Could not save. Please try again.':'The database did not keep this change. Allow the owner to update manager roles in the database (see help).')}
+ m.perms=sv.slice();toast((on?'Added: ':'Removed: ')+MPN[k].split(' (')[0]+' · '+m.perms.length+' of '+ALLP.length+' sections on')};
+/* owner can edit a manager's photo, name, number and badge */
+var MBE=['🛡️','⭐','🎧','📦','🧾','✅','💼','🔧'];
+function mgBadge(id){var b=((lsRaw().site||{}).mbadge||{})[id];return b&&b.t?{e:b.e||'🛡️',t:String(b.t)}:{e:'🛡️',t:'Manager'}}
+var _mgrCard16=mgrCard;mgrCard=function(m){var b=mgBadge(m.id),c=_mgrCard16(m).replace('🛡️ Manager',esc(b.e)+' '+esc(b.t)),nm=String(m.nm||'').split(' ');
+ return c+'<details class="oc"><summary><b>✎ Edit photo, name, number, badge</b></summary><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">'+fpick('Change profile photo','accept="image/*"','mgrPhoto(\''+m.id+'\',this)','mgph_'+m.id)+
+  '<div class="two">'+fld('mf_'+m.id,'First name','text','maxlength="30" value="'+esc(nm[0]||'')+'"')+fld('ml_'+m.id,'Last name','text','maxlength="30" value="'+esc(nm.slice(1).join(' '))+'"')+'</div>'+
+  fld('mm_'+m.id,'Mobile number','tel','inputmode="numeric" maxlength="10" value="'+esc(m.mob||'')+'"')+'<small>This changes the number shown for this manager. Their login stays the same.</small>'+
+  '<label>Badge</label><div class="two"><select id="mbe_'+m.id+'">'+MBE.map(function(x){return '<option'+(x===b.e?' selected':'')+'>'+x+'</option>'}).join('')+'</select><input id="mb_'+m.id+'" maxlength="20" value="'+esc(b.t)+'" placeholder="e.g. Senior Manager"></div>'+
+  '<button class="cta" onclick="mgrProfSave(\''+m.id+'\')">Save profile</button></div></details>'};
+async function mgrProfSave(id){var f=($('mf_'+id).value||'').trim(),l=($('ml_'+id).value||'').trim(),mb=($('mm_'+id).value||'').replace(/\D/g,''),bt=($('mb_'+id).value||'').trim().slice(0,20)||'Manager',be=$('mbe_'+id).value||'🛡️',m=MGRS.filter(function(x){return x.id===id})[0];
+ if(!f)return toast('Enter the first name.');if(mb&&!/^[6-9]\d{9}$/.test(mb))return toast('Enter a valid 10-digit mobile number, or leave it empty.');
+ if(mb&&m&&mb!==m.mob){var q=await sb.rpc('mobile_available',{p_mobile:mb});if(q&&q.data===false)return toast('This number is already used by another account.')}
+ var r=await sb.from('profiles').update({first_name:f,last_name:l,mobile:mb||null}).eq('id',id).select();if(r.error||!(r.data&&r.data.length))return toast('Could not save. The database did not allow this change.');
+ var map=Object.assign({},(lsRaw().site||{}).mbadge||{});if(bt==='Manager'&&be==='🛡️')delete map[id];else map[id]={t:bt,e:be};
+ try{await siteSave({mbadge:map})}catch(e){toast('Saved, but the badge could not be saved.')}
+ MOPEN[id]=true;MGRS=null;CUST=null;toast('Manager profile updated ✓');adm('Managers')}
+async function mgrPhoto(id,inp){var f=inp.files&&inp.files[0];inp.value='';if(!f)return;toast('Uploading photo…');
+ try{var b=await shrink(f,400,.85,true),path=USER.id+'/for-'+id+'-'+rid()+'.jpg';await upload('avatars',path,b);
+  var q=await sb.from('profiles').select('avatar_path').eq('id',id).maybeSingle(),old=q.data&&q.data.avatar_path,r=await sb.from('profiles').update({avatar_path:path}).eq('id',id).select();
+  if(r.error||!(r.data&&r.data.length))throw new Error('no');if(old)sb.storage.from('avatars').remove([old]);MOPEN[id]=true;MGRS=null;CUST=null;toast('Photo updated ✓');adm('Managers')}
+ catch(e){toast('Could not change the photo. Please try again.')}}
+var _roleTag16=roleTag;roleTag=function(id){if(ROLEMAP[id]==='manager'){var b=mgBadge(id);return ' <span class="tier">'+esc(b.e)+' '+esc(b.t)+'</span>'}return _roleTag16(id)};
+
 (async function(){try{await boot();window.__ok=1;ownerCheck();txInit()}catch(e){window.__showErr(e)}})();
 </script>
 <style>
@@ -2504,8 +2545,8 @@ window.addEventListener('popstate',function(e){
 .szq,.szr,.pl-fl,.pl-tg{display:flex;flex-wrap:wrap;gap:6px}.szq button{padding:8px 12px;border-radius:99px;border:1px solid var(--line);font-weight:600;font-size:.85rem;color:var(--ink);background:var(--surface)}.szq .szx{color:#c0392b}
 .szg{display:flex;flex-direction:column;gap:6px;margin-top:12px}.szg>small{color:var(--muted);font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}.szg>small.szn{text-transform:none;letter-spacing:0;font-weight:500}
 .szc{min-width:46px;padding:9px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;font-size:.88rem}.szc.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
-.szadd{display:flex;gap:8px}.szadd input,.szs input,.pl-tools input{min-width:0;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}.szadd input{flex:1}
-.szs{display:grid;grid-template-columns:64px minmax(0,1fr) 40px;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.szs button{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);color:#c0392b;background:var(--surface)}
+.szadd{display:flex;gap:8px}.szadd input,.szrw input,.pl-tools input{min-width:0;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}.szadd input{flex:1}
+.szrw{display:grid;grid-template-columns:64px minmax(0,1fr) 40px;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.szrw button{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);color:#c0392b;background:var(--surface)}
 .pl-tools{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 .pl-bar{position:sticky;top:0;z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px}.pl-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pl-act select{flex:1;min-width:160px}.pl-act .cta{padding:10px 16px}.pl-del{padding:10px 14px;border-radius:12px;background:#c0392b;color:#fff;font-weight:700}
 .pl-list{display:flex;flex-direction:column;gap:10px}.pl-c{display:grid;grid-template-columns:auto 56px minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}.pl-c.on{border-color:var(--accent);box-shadow:0 0 0 2px rgba(212,175,90,.35)}
@@ -2518,6 +2559,14 @@ window.addEventListener('popstate',function(e){
 .pgal>div::before{content:"";position:absolute;inset:-30px;background:var(--u) center/cover no-repeat;filter:blur(26px) brightness(.9) saturate(1.1);transform:scale(1.15);z-index:0}.pgal>div>img{z-index:1}.pgal>div>video{z-index:1}
 .pgal>div{position:relative;min-height:0}.pgal>div>img{position:absolute!important;inset:0;width:100%!important;height:100%!important;object-fit:contain!important}
 .pgal>div{position:relative}.pgal video{position:absolute!important;inset:0;width:100%!important;height:100%!important;object-fit:contain!important;background:#000;display:block}.pdb{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+
+/* ===== v16 ===== */
+.popt .szs button:not([aria-pressed="true"]){color:var(--szc,var(--ink))}
+.szprev{padding:8px 12px;border:1px dashed var(--line);border-radius:10px;font-size:.9rem}.szprev b{font-size:1.05rem;letter-spacing:.04em}
+.cols{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.cbtn{width:36px;height:36px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);padding:0;min-height:0}
+.cbtn[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.modal .cols input[type=color]{width:44px;height:44px;flex:none;padding:3px;border-radius:50%}
 </style>
 </body>
 </html>
