@@ -777,7 +777,7 @@ var SB_URL='https://pyuqmtqywtpticmeuiwe.supabase.co',SB_KEY='sb_publishable_XeO
 /* Owner-only actions (create manager, set password, delete account) run in the Edge Function "admin-actions" */
 function shvAdmin(c){function call(action,p){return c.functions.invoke('swift-endpoint',{body:Object.assign({action:action},p)}).then(async function(r){
   if(r.error){var m='Request failed';try{var j=await r.error.context.json();m=j.error||m}catch(e){m=r.error.message||m}return{data:null,error:{message:m}}}
-  if(r.data&&r.data.error)return{data:null,error:{message:r.data.error}};return{data:r.data,error:null}})}
+  if(r.data&&r.data.error)return{data:null,error:{message:r.data.error}};return{data:(r.data&&r.data.user)?r.data.user:r.data,error:null}})}
  c.admin={createUser:function(o){return call('createUser',{email:o.email,password:o.password,meta:o.meta||{}})},updateUser:function(id,o){return call('updateUser',{id:id,password:o.password})},deleteUser:function(id){return call('deleteUser',{id:id})}}}
 var C=['All','Men','Women','Ethnic','Footwear','Watches','Accessories'];
 var STS=['Pending approval','Approved','Shipped','Delivered','Rejected','Cancelled'];
