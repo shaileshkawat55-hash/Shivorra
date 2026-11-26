@@ -2736,8 +2736,11 @@ menu=function(){
  _m21();
  try{
   if(!isAdm())return;
-  var h=[].filter.call(document.querySelectorAll('h3.mh3'),function(x){return x.querySelector('.tier')||/Store owner/i.test(x.textContent)})[0];
-  if(h){var d=document.createElement('div');d.innerHTML=mgCard();h.parentNode.replaceChild(d.firstChild,h)}
+  var all=[].slice.call(document.querySelectorAll('h3.mh3'));
+  var old=all.filter(function(x){return x.querySelector('.tier')||/Store owner/i.test(x.textContent)})[0];
+  var ps=all.filter(function(x){return /Profile settings/.test(x.textContent)})[0];
+  if(old)old.textContent='Admin tools';
+  if(ps&&!document.querySelector('.mgc')){var d=document.createElement('div');d.innerHTML=mgCard();ps.parentNode.insertBefore(d.firstChild,ps)}
  }catch(e){}
 };
 var a=$('menuBtn'),b=$('ba');if(a)a.onclick=menu;if(b)b.onclick=menu;
