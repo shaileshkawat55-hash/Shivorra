@@ -2688,10 +2688,10 @@ admMgr=function(){if(MGRS===null)return '<p>Loading…</p>';var MX=siteGet().max
 <style id="v21css">
 /* ===== v21: bigger full-width scrolling category circles ===== */
 main .cats{margin:14px -16px 0}
-main .cats .wrap{padding:8px 16px 12px;gap:14px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none}
+main .cats .wrap{padding:8px 16px 12px;gap:14px;scroll-padding-inline:16px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none}
 main .cats .wrap::-webkit-scrollbar{display:none}
 main .cats .wrap::after{content:"";flex:0 0 4px}
-#cats .chip{scroll-snap-align:start;flex:none}
+#cats .chip{flex:none}
 #cats .chip.wc{gap:8px;min-width:76px;padding:4px 2px!important}
 #cats .chip.wc .cc{width:calc(var(--cs,48px)*1.5)!important;height:calc(var(--cs,48px)*1.5)!important;font-size:calc(var(--cs,48px)*.8)!important;box-shadow:0 6px 16px rgba(0,0,0,.10);background:linear-gradient(145deg,var(--surface),var(--bg))}
 #cats .chip.wc>span:last-child{font-size:.92rem;font-weight:700}
